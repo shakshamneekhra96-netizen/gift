@@ -6,6 +6,20 @@
 <title>Vintage Birthday Flipbook</title>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
+@font-face {
+  font-family: 'Halimun';
+  src: url('halimun-font/Halimun-W7jn.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PerfectoCalligraphy';
+  src: url('perfecto-calligraphy-personal-use/PerfectoCalligraphy.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --page-width: min(760px, 95vw);
   --page-height: calc(var(--page-width) * 0.75);
@@ -15,7 +29,6 @@
 body {
   margin:0;
   padding:24px;
-  
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -87,10 +100,11 @@ body {
 
 .cover .main-title {
   font-size: clamp(2rem, 8vw, 3.5rem);
-  font-family: 'Cinzel', serif;
+  font-family: 'IM Fell English', serif;
   margin-bottom: 25px;
   text-transform: uppercase;
   letter-spacing: 4px;
+  font-weight: 600;
 }
 
 .cover .person-img {
@@ -112,7 +126,8 @@ body {
 .cover .subtitle {
   font-size: clamp(1.25rem, 5.5vw, 2rem);
   margin: 10px 0 0 0;
-  font-family: 'Great Vibes', cursive;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
 }
 
 .page .note, .cover .note {
@@ -152,7 +167,7 @@ body {
   color: black;
   font-size:1.1rem;
   font-weight:600;
-  font-family: 'Cinzel', serif;
+  font-family: 'IM Fell English', serif;
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 .btn:hover { transform:translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,0.25); }
@@ -262,9 +277,20 @@ const pages = [
     message:"Wishing you a day filled with joy, love, and beautiful memories.", 
     personImg:"front_photo.png" 
   },
-  { message:"You’re the sweetest person I’ve ever met, and you have such a cute smile—please always keep smiling like that. Stay happy always, may all your dreams come true, because you deserve nothing less." },
-  { message:"I just want to say that you’re the greatest company I could ever have. You bring so much positive energy wherever you go, and you’re always special to everyone. Trust me, you have such a sweet voice as well. Thank you for teaching me chess — honestly, I didn’t know how to play before, but now I can at least play a little 😂." },
-  { message:"You have so many talents: you’re artistic, skilled in gardening, great at games, hardworking, love reading, and I’m sure you have many more hidden skills. You’re truly amazing" },
+  {
+  "message": "Hey,\nI just wanted to say that you’re honestly the best company I could ever have. I really enjoy talking to you — more than anyone else. I don’t even know why; maybe it’s because of the amazing energy you carry. That’s something truly rare, and it’s one of the many things I really appreciate about you. You’re always special to everyone (and I’m sure a lot of people have told you that already)."
+},
+
+{
+  "message": "Thank you for always suggesting such good movies and series — you seriously have great taste! And of course, thanks for teaching me chess! I had no idea how to play before, but now at least I can play a little — all thanks to you. 😂 You’re genuinely a wonderful person and a very special friend."
+},
+{
+  "message": "You have so many talents — you’re artistic, love doing art and craft, can play a bit of piano and the mouth organ, skilled in gardening, great at games, hardworking, and love reading. You even take really nice photos — especially of the moon and the solar system! I just realized how talented you truly are. Seriously, you’re amazing — keep it up and never stop being the wonderful person you are. 🌙✨"
+},
+{
+  "message": "I thought this quote suits you perfectly —\n“She carries a quiet kind of magic — the kind that doesn’t seek attention, but leaves everything she touches a little more beautiful, a little more alive.”\n- Butterflies Rising"
+},
+
   { message:"Many, many happiest birthdays! 🎉 \n May your day be filled with love, laughter, and all the joy you deserve. Keep smiling and shining always" }
 ];
 
@@ -341,4 +367,3 @@ render();
 
 </body>
 </html>
-
