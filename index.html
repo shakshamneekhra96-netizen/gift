@@ -168,15 +168,16 @@ body {
   bottom: calc(14px + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255,255,255,0.95); /* solid for crisp text */
-  border: 1px solid rgba(0,0,0,0.28);
+  background: transparent; /* transparent overlay on page */
+  border: none;
   padding: 8px 12px;
   border-radius: 10px;
   font-size: 1rem;
   font-family: 'IM Fell English', serif;
   color: #2e2218;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.6); /* keep readable on textures */
   /* remove blur to avoid softness on mobile */
-  z-index: 11;
+  z-index: 50; /* ensure it covers the page */
   display: none; /* hidden by default, shown on small screens */
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -184,7 +185,8 @@ body {
 
 /* Responsive adjustments */
 @media(max-width:640px){ 
-  :root{ --page-width: 95vw; --page-height: calc(75vw  * 1.85);} 
+  /* Keep a consistent mobile page size */
+  :root{ --page-width: 95vw; --page-height: calc(95vw * 1.85);} 
   body{ padding:16px; padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
   .cover .main-title{ margin-bottom:15px; letter-spacing:3px;}
   .cover .note, .page .note{ max-width:90%; margin-top:15px;} 
@@ -194,9 +196,7 @@ body {
   .page, .cover { height: var(--page-height); }
   .page{ padding:18px 14px; }
   .btn{ font-size:1rem; padding:8px 10px;}
-  .mobile-note {
-      width: 52%;
-    }
+  .mobile-note { width: 80%; max-width: 92vw; }
   /* hide buttons and show helper note on phones */
   .controls{ display:none; }
   .mobile-note{ display:block; bottom: calc(18px + env(safe-area-inset-bottom)); max-width: 90vw; text-align:center; }
@@ -209,6 +209,7 @@ body {
   .page .note, .cover .note{ font-size: clamp(1.1rem, 4.8vw, 1.6rem); }
   .btn{ font-size: 1.15rem; }
   .mobile-note{ font-size: 1.05rem; }
+  /* inherit --page-height from 640px rule for stability */
 }
 
 .page, .cover {
