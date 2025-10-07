@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vintage Birthday Flipbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --page-width: min(760px, 95vw);
+  --page-height: calc(var(--page-width) * 0.75);
+  --shadow: rgba(0,0,0,0.36);
+}
+
+body {
+  margin:0;
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  background: linear-gradient(180deg, #fdf6ed 0%, #d2b48c 85%);
+  font-family: 'IM Fell English', serif;
+  /* keep content visible above fixed controls on mobile (incl. iPhone safe area) */
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
+}
+
+.scene {
+  width: var(--page-width);
+  perspective: 1500px;
+  position: relative;
+  margin-bottom:80px; /* space for fixed buttons */
+}
+
+.book {
+  width: 100%;
+  height: var(--page-height);
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.page-wrap {
+  position: absolute;
+  inset: 0;
+  display:flex;
+  justify-content:center;
+  pointer-events:none;
+}
+
+.page {
+  width:100%;
+  height:100%;
+  padding:28px 24px;
+  border-radius:16px;
+  box-shadow: 0 28px 60px var(--shadow), 0 8px 18px rgba(0,0,0,0.18), inset 0 2px 0 rgba(255,255,255,0.08), inset 0 0 0 1px rgba(58,43,31,0.12);
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  pointer-events: auto;
+  color: #3a2b1f;
+  background: url('image.png') no-repeat center/cover;
+  background-size: cover;
+  background-color: #f3e6cd;
+  background-blend-mode: multiply;
+  transition: transform 1s cubic-bezier(.2,.8,.12,1);
+  opacity:0;
+}
+
+.page.visible {
+  opacity:1;
+  transition: opacity 0.8s ease;
+}
+
+.cover {
+  background: url('cover.jpg') no-repeat center/cover;
+  background-size: cover;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #3a2b1f;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+.cover .main-title {
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-family: 'Cinzel', serif;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
+.cover .person-img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #3a2b1f;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+
+.cover .person-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cover .subtitle {
+  font-size: clamp(1.25rem, 5.5vw, 2rem);
+  margin: 10px 0 0 0;
+  font-family: 'Great Vibes', cursive;
+}
+
+.page .note, .cover .note {
+  font-size: clamp(1rem, 4.2vw, 1.4rem);
+  line-height: 1.9;
+  max-width: 82%;
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'IM Fell English', serif;
+  letter-spacing: 0.2px;
+}
+
+/* Buttons fixed at bottom center */
+.controls {
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  align-items:center;
+  position: fixed;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  left:50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.15);
+  padding: 6px 12px;
+  border-radius: 12px;
+  z-index: 10;
+  flex-wrap: wrap;
+}
+
+.btn {
+  background: linear-gradient(180deg, rgba(255,255,255,0.4), rgba(200,200,200,0.1));
+  border:1px solid rgba(0,0,0,0.3);
+  padding:10px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  color: black;
+  font-size:1.1rem;
+  font-weight:600;
+  font-family: 'Cinzel', serif;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.btn:hover { transform:translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,0.25); }
+.btn:active { transform: translateY(1px); }
+.btn[disabled]{ opacity:0.48; cursor:not-allowed; }
+
+.sparkle { pointer-events:none; position:absolute; inset:0; z-index:10; overflow:hidden; }
+.particle { position:absolute; width:6px; height:6px; border-radius:50%; background:linear-gradient(180deg, #fff8de, #f7e6b9); opacity:0; transform:translate3d(0,0,0) scale(0.8); animation: sparkle 1000ms linear forwards; box-shadow:0 2px 6px rgba(191,160,122,0.4); }
+@keyframes sparkle{ 0%{ opacity:0; transform:translateY(10px) scale(0.6) rotate(0deg) } 25%{ opacity:1; transform:translateY(-8px) scale(1.1) rotate(8deg) } 100%{ opacity:0; transform:translateY(-40px) scale(0.4) rotate(20deg) } }
+
+/* Small helper note for phones */
+.mobile-note{
+  position: fixed;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.95); /* solid for crisp text */
+  border: 1px solid rgba(0,0,0,0.28);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: 'IM Fell English', serif;
+  color: #2e2218;
+  /* remove blur to avoid softness on mobile */
+  z-index: 11;
+  display: none; /* hidden by default, shown on small screens */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Responsive adjustments */
+@media(max-width:640px){ 
+  :root{ --page-width: 95vw; --page-height: calc(75vw  * 1.85);} 
+  body{ padding:16px; padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
+  .cover .main-title{ margin-bottom:15px; letter-spacing:3px;}
+  .cover .note, .page .note{ max-width:90%; margin-top:15px;} 
+  .cover .person-img { width: 130px; height: 130px; margin-bottom:15px; }
+  /* Ensure mobile pages are exactly 185% of width */
+  .book{ height: var(--page-height); }
+  .page, .cover { height: var(--page-height); }
+  .page{ padding:18px 14px; }
+  .btn{ font-size:1rem; padding:8px 10px;}
+  .mobile-note {
+      width: 52%;
+    }
+  /* hide buttons and show helper note on phones */
+  .controls{ display:none; }
+  .mobile-note{ display:block; bottom: calc(18px + env(safe-area-inset-bottom)); max-width: 90vw; text-align:center; }
+}
+
+/* Responsive adjustments */
+@media(max-width:440px){ 
+  .cover .main-title{ font-size: clamp(2.2rem, 9vw, 3.8rem); }
+  .cover .subtitle{ font-size: clamp(1.5rem, 6.5vw, 2.2rem); }
+  .page .note, .cover .note{ font-size: clamp(1.1rem, 4.8vw, 1.6rem); }
+  .btn{ font-size: 1.15rem; }
+  .mobile-note{ font-size: 1.05rem; }
+}
+
+.page, .cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertically center */
+  align-items: center;     /* horizontally center */
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background-size: cover;
+  color: #3a2b1f;
+}
+
+.page .note, .cover .note {
+  font-size: calc(1rem + 0.8vw); /* dynamically scales */
+  line-height: 1.6;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+/* remove duplicate conflicting control block; above definition handles layout */
+
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="book" id="book">
+    <div class="page-wrap" id="pageWrap"></div>
+    <div class="sparkle" id="sparkle"></div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn" id="prevBtn">👈 Left</button>
+  <button class="btn" id="nextBtn">Right 👉</button>
+</div>
+
+<div class="mobile-note">Swipe left or right to turn pages</div>
+
+<script>
+const pages = [
+  { 
+    mainTitle:"HAPPY BIRTHDAY", 
+    subtitle:"Anjali Chandwani", 
+    message:"Wishing you a day filled with joy, love, and beautiful memories.", 
+    personImg:"front_photo.png" 
+  },
+  { message:"You’re the sweetest person I’ve ever met, and you have such a cute smile—please always keep smiling like that. Stay happy always, may all your dreams come true, because you deserve nothing less." },
+  { message:"I just want to say that you’re the greatest company I could ever have. You bring so much positive energy wherever you go, and you’re always special to everyone around you. I’m truly grateful for that. Thank you for teaching me chess — before you, I didn’t even know how to play! Thank you for always being so kind and helpful." },
+  { message:"Many, many happiest birthdays! 🎉 \n May your day be filled with love, laughter, and all the joy you deserve. Keep smiling and shining always" }
+];
+
+let index=0;
+const book=document.getElementById('book');
+const pageWrap=document.getElementById('pageWrap');
+const sparkle=document.getElementById('sparkle');
+
+function escapeHtml(str){ if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\r?\n/g,'<br/>'); }
+
+function render(){
+    pageWrap.innerHTML='';
+    const current = pages[index];
+    const pageNode=document.createElement('section');
+    pageNode.className='page right';
+    
+    if(current.mainTitle){
+      pageNode.classList.add('cover');
+      pageNode.innerHTML=`<div class="cover">
+        <div class="main-title">${escapeHtml(current.mainTitle)}</div>
+        ${current.personImg ? `<div class="person-img"><img src="${current.personImg}" alt="CEO" /></div>` : ''}
+        <div class="subtitle">${escapeHtml(current.subtitle)}</div>
+        <div class="note">${escapeHtml(current.message)}</div>
+      </div>`;
+    } else {
+      pageNode.innerHTML=`<div class="note">${escapeHtml(current.message)}</div>`;
+    }
+
+    pageWrap.appendChild(pageNode);
+    setTimeout(()=>{ pageNode.classList.add('visible'); },100);
+}
+
+// Animate flip effect
+function animateFlip(){
+    book.style.transition='transform 0.6s ease';
+    book.style.transform='rotateY(-10deg)';
+    setTimeout(()=>{ book.style.transform='rotateY(0deg)'; },300);
+    showSparkle();
+}
+
+function showSparkle(){
+  sparkle.innerHTML='';
+  for(let i=0;i<6;i++){
+    const el=document.createElement('div'); 
+    el.className='particle';
+    el.style.left=(20+Math.random()*60)+'%';
+    el.style.top=(40+Math.random()*30)+'%';
+    el.style.animationDelay=(i*80)+'ms';
+    sparkle.appendChild(el);
+    setTimeout(()=>{el.remove();},1400);
+  }
+}
+
+// Button navigation
+document.getElementById('nextBtn').addEventListener('click',()=>{ if(index<pages.length-1){ index++; animateFlip(); render(); } });
+document.getElementById('prevBtn').addEventListener('click',()=>{ if(index>0){ index--; animateFlip(); render(); } });
+
+// Keyboard navigation
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown') document.getElementById('nextBtn').click();
+  if(e.key==='ArrowLeft'||e.key==='PageUp') document.getElementById('prevBtn').click();
+});
+
+// Swipe gestures
+let touchStartX=0;
+document.addEventListener('touchstart',e=>{ touchStartX=e.touches[0].clientX; },{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  if(Math.abs(dx)>40){ dx<0?document.getElementById('nextBtn').click():document.getElementById('prevBtn').click(); }
+});
+
+render();
+</script>
+
+</body>
+</html>
