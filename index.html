@@ -277,15 +277,27 @@ const pages = [
     message:"Wishing you a day filled with joy, love, and beautiful memories.", 
     personImg:"front_photo.png" 
   },
-  {
-  "message": "Hey,\nI just wanted to say that you’re honestly the best company I could ever have. I really enjoy talking to you — more than anyone else. I don’t even know why; maybe it’s because of the amazing energy you carry. That’s something truly rare, and it’s one of the many things I really appreciate about you. You’re always special to everyone (and I’m sure a lot of people have told you that already)."
-},
+//   {
+//   "message": "Hey,\nI just wanted to say that you’re honestly the best company I could ever have. I really enjoy talking to you — more than anyone else. I don’t even know why; maybe it’s because of the amazing energy you carry. That’s something truly rare, and it’s one of the many things I really appreciate about you. You’re always special to everyone (and I’m sure a lot of people have told you that already)."
+// },
 
+// {
+//   "message": "Thank you for always suggesting such good movies and series — you seriously have great taste! And of course, thanks for teaching me chess! I had no idea how to play before, but now at least I can play a little — all thanks to you. 😂 You’re genuinely a wonderful person and a very special friend."
+// },
+// {
+//   "message": "You have so many talents — you’re artistic, love doing art and craft, can play a bit of piano and the mouth organ, skilled in gardening, great at games, hardworking, and love reading. You even take really nice photos — especially of the moon and the solar system! I just realized how talented you truly are. Seriously, you’re amazing — keep it up and never stop being the wonderful person you are. 🌙✨"
+// },
 {
-  "message": "Thank you for always suggesting such good movies and series — you seriously have great taste! And of course, thanks for teaching me chess! I had no idea how to play before, but now at least I can play a little — all thanks to you. 😂 You’re genuinely a wonderful person and a very special friend."
+  "message": "Hey,\nOn February 16-17, 2024, I saw you for the first time outside the canteen. You were wearing a black t-shirt and blue jeans, walking while smiling, and a little wind was blowing—you looked really good. Later, I got to know your name when KYT happened. A few months after that, I moved to Marsh, and then you moved to the USA. You came back in September, and initially, I thought you were very strict. I was honestly a bit afraid to talk to you."
 },
 {
-  "message": "You have so many talents — you’re artistic, love doing art and craft, can play a bit of piano and the mouth organ, skilled in gardening, great at games, hardworking, and love reading. You even take really nice photos — especially of the moon and the solar system! I just realized how talented you truly are. Seriously, you’re amazing — keep it up and never stop being the wonderful person you are. 🌙✨"
+  "message": "But when we actually started talking, I realized you were completely different. I found that you were the most amazing company I could ever have, and I genuinely enjoyed talking to you more than anyone else. I don’t know why—maybe it’s because of the amazing energy you carry. That kind of energy is truly rare, and I think you’re so special to everyone."
+},
+{
+  "message": "Thank you for always suggesting such good movies and series—you seriously have great taste! You’re also a really interesting person with so many skills. You’re artistic, love doing art and crafts, can play a bit of piano and the mouth organ, are skilled in gardening, great at games (like chess—I’ve learned from you, though I’m still not as good), and love reading. You even take really nice photos—especially of the moon and the solar system."
+},
+{
+  "message": "I just realized how truly talented you are. Seriously, you’re amazing. Keep it up, and never stop being the wonderful person you are."
 },
 {
   "message": "I thought this quote suits you perfectly —\n“She carries a quiet kind of magic — the kind that doesn’t seek attention, but leaves everything she touches a little more beautiful, a little more alive.”\n- Butterflies Rising"
@@ -322,14 +334,29 @@ function render(){
     pageWrap.appendChild(pageNode);
     setTimeout(()=>{ pageNode.classList.add('visible'); },100);
 }
+const flipSound = new Audio('page-flip-47177.mp3');
 
-// Animate flip effect
-function animateFlip(){
-    book.style.transition='transform 0.6s ease';
-    book.style.transform='rotateY(-10deg)';
-    setTimeout(()=>{ book.style.transform='rotateY(0deg)'; },300);
-    showSparkle();
+// Function to play sound
+function playFlipSound() {
+  flipSound.currentTime = 0; // reset to start
+  flipSound.play();
 }
+
+// Example usage: call this inside your page flip function
+function animateFlip(){
+  playFlipSound(); // play sound
+  book.style.transition = 'transform 0.6s ease';
+  book.style.transform = 'rotateY(-10deg)';
+  setTimeout(()=>{ book.style.transform='rotateY(0deg)'; },300);
+  showSparkle();
+}
+// // Animate flip effect
+// function animateFlip(){
+//     book.style.transition='transform 0.6s ease';
+//     book.style.transform='rotateY(-10deg)';
+//     setTimeout(()=>{ book.style.transform='rotateY(0deg)'; },300);
+//     showSparkle();
+// }
 
 function showSparkle(){
   sparkle.innerHTML='';
