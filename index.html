@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vintage Birthday Flipbook</title>
+<title>Happy Birthday Mam</title>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
 @font-face {
@@ -249,18 +249,59 @@ body {
   word-wrap: break-word;
 }
 
+/* ===============================
+   Vintage Drift Butterflies 🦋
+   =============================== */
+   .butterfly {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  opacity: 0;
+  background: url('ddapzle-c7909979-452f-44b2-a03e-d206fcf49d3b.gif') no-repeat center/contain;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.25));
+  animation: vintageButterflyFly var(--duration) ease-in-out forwards;
+  transform-origin: center;
+  z-index: 15;
+}
+
+@keyframes vintageButterflyFly {
+  0% {
+    opacity: 0;
+    transform: translate(var(--start-x), var(--start-y)) scale(0.85) rotate(0deg);
+  }
+  10% {
+    opacity: 0.8;
+  }
+  40% {
+    transform: translate(var(--mid-x), var(--mid-y)) scale(1) rotate(var(--r1));
+    opacity: 1;
+  }
+  70% {
+    transform: translate(var(--end-x), var(--end-y)) scale(1) rotate(var(--r2));
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--end-x) * 1.2), calc(var(--end-y) * 1.1)) scale(0.9) rotate(var(--r3));
+  }
+}
+
+
 /* remove duplicate conflicting control block; above definition handles layout */
 
 </style>
 </head>
 <body>
 
-<div class="scene">
-  <div class="book" id="book">
-    <div class="page-wrap" id="pageWrap"></div>
-    <div class="sparkle" id="sparkle"></div>
+  <div class="scene">
+    <div class="book" id="book">
+      <div class="page-wrap" id="pageWrap"></div>
+      <div class="sparkle" id="sparkle"></div>
+    </div>
+    <div class="butterfly-container" id="butterflyContainer"></div>
   </div>
-</div>
+  
 
 <div class="controls">
   <button class="btn" id="prevBtn">👈 Left</button>
@@ -304,9 +345,10 @@ const pages = [
 },
 
 {
-  "message": "I just want to say one last thing from my side -\n I know you don’t usually open up, even when you need help, and that you try to handle everything on your own. But please remember, if you ever need anything or just want to talk, you can message or call me anytime. I’ll always make time for you. It’s not something I’m just saying out of formality — I really mean it . No matter what, I’ll always be here for you.\n Many, many happiest birthdays again! 🎉"
-}
-
+  "message": "I just want to say one last thing from my side -\n I know you don’t usually open up, even when you need help, and that you try to handle everything on your own. But please remember, if you ever need anything or just want to talk, you can message or call me anytime. I’ll always make time for you. It’s not something I’m just saying out of formality — I really mean it . No matter what, I’ll always be here for you."
+},
+{
+  "message": "Many, many happiest birthdays again! 🥳 \nAlways keep that cute smile just like you always do, and stay happy — the only thing that truly matters ✨"}
 ];
 
 let index=0;
@@ -315,6 +357,52 @@ const pageWrap=document.getElementById('pageWrap');
 const sparkle=document.getElementById('sparkle');
 
 function escapeHtml(str){ if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\r?\n/g,'<br/>'); }
+function showButterfly() {
+  const container = document.getElementById('butterflyContainer');
+  const count = Math.floor(Math.random() * 2) + 2; // 2–3 butterflies
+
+  for (let i = 0; i < count; i++) {
+    const butterfly = document.createElement('div');
+    butterfly.className = 'butterfly';
+
+    // Duration (3.2 – 4.2s)
+    const duration = (3.2 + Math.random() * 1.0) + 's';
+    butterfly.style.setProperty('--duration', duration);
+
+    // Start positions (from bottom or corners)
+    const startX = (Math.random() * window.innerWidth * 0.8 - 200) + 'px';
+    const startY = (Math.random() * 50 + 500) + 'px'; // below bottom
+    const midX = (Math.random() * 200 - 100) + 'px';
+    const midY = (-100 - Math.random() * 100) + 'px';
+    const endX = (Math.random() * 200 - 100) + 'px';
+    const endY = (-250 - Math.random() * 150) + 'px';
+
+    // Soft rotations
+    butterfly.style.setProperty('--r1', (Math.random() * 20 - 10) + 'deg');
+    butterfly.style.setProperty('--r2', (Math.random() * 25 - 15) + 'deg');
+    butterfly.style.setProperty('--r3', (Math.random() * 30 - 10) + 'deg');
+
+    // Horizontal starting offset (bottom edges)
+    butterfly.style.left = (10 + Math.random() * 80) + '%';
+    butterfly.style.bottom = '-60px';
+
+    butterfly.style.setProperty('--start-x', startX);
+    butterfly.style.setProperty('--start-y', startY);
+    butterfly.style.setProperty('--mid-x', midX);
+    butterfly.style.setProperty('--mid-y', midY);
+    butterfly.style.setProperty('--end-x', endX);
+    butterfly.style.setProperty('--end-y', endY);
+
+    // Slight delay between each for realism
+    butterfly.style.animationDelay = (Math.random() * 0.5) + 's';
+
+    container.appendChild(butterfly);
+
+    // Auto remove after animation ends
+    setTimeout(() => butterfly.remove(), 4500);
+  }
+}
+
 
 function render(){
     pageWrap.innerHTML='';
@@ -352,6 +440,7 @@ function animateFlip(){
   book.style.transform = 'rotateY(-10deg)';
   setTimeout(()=>{ book.style.transform='rotateY(0deg)'; },300);
   showSparkle();
+  showButterfly();
 }
 // // Animate flip effect
 // function animateFlip(){
