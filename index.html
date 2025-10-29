@@ -234,9 +234,11 @@ body {
 // }
 
 // window.onload = logVisit;
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxDQzCZFrjdixh3gKrGpzKtlmm0KpXF7nm0PlQH3WwOXWAyGvpCaF3JHNDsfV74rEI/exec"; // replace
-function getDeviceType(ua) {
-  ua = (ua || '').toLowerCase();
+const scriptURL = "https://script.google.com/macros/s/AKfycbycyLpNeLB1EKDR1ET7kBkG9z2mn41H9a6BuwNdVDWXR8yICX7Vr_NXnvfQVDWYZhNZ/exec"; // replace
+
+function getDeviceType() {
+  const ua = navigator.userAgent;
+
   if (/iphone/.test(ua)) return "iPhone";
   if (/ipad/.test(ua)) return "iPad";
   if (/android/.test(ua)) return "Android";
@@ -245,37 +247,42 @@ function getDeviceType(ua) {
   return "Desktop";
 }
 
-async function logVisit() {
-  const ua = navigator.userAgent || '';
-  const payload = {
-    ts_iso: new Date().toISOString(),
-    deviceType: getDeviceType(ua),
-    platform: navigator.platform || '',
-    language: navigator.language || '',
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
-    clientHints: {},
-    userAgent: ua
-  };
-
-  if (navigator.userAgentData) {
-    payload.clientHints.brands = navigator.userAgentData.brands || null;
-  }
-
+async function getPublicIP() {
   try {
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-  } catch (e) {
-    // console.warn('Error sending data:', e);
+    const res = await fetch("https://api.ipify.org?format=json");
+    const data = await res.json();
+    return data.ip;
+  } catch (err) {
+    // console.error("IP fetch failed", err);
+    return "";
   }
-
-  // console.log('Data sent:', payload);
 }
 
-window.addEventListener('load', logVisit);
+async function logVisit() {
+  const ip = await getPublicIP();
+  const visitData = {
+    ts_iso: new Date().toISOString(),
+    deviceType: getDeviceType(),
+    platform: navigator.platform,
+    language: navigator.language,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    userAgent: navigator.userAgent,
+    ip: ip
+  };
+
+  await fetch(scriptURL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(visitData)
+  });
+}
+
+window.onload = logVisit;
+
+
+
+
 const pages = [
   { 
     mainTitle: "HAPPY BIRTHDAY", 
