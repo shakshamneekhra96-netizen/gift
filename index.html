@@ -235,8 +235,6 @@ body {
 
 // window.onload = logVisit;
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxDQzCZFrjdixh3gKrGpzKtlmm0KpXF7nm0PlQH3WwOXWAyGvpCaF3JHNDsfV74rEI/exec"; // replace
-
-
 function getDeviceType(ua) {
   ua = (ua || '').toLowerCase();
   if (/iphone/.test(ua)) return "iPhone";
@@ -255,7 +253,8 @@ async function logVisit() {
     platform: navigator.platform || '',
     language: navigator.language || '',
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
-    clientHints: {}
+    clientHints: {},
+    userAgent: ua
   };
 
   if (navigator.userAgentData) {
@@ -273,11 +272,10 @@ async function logVisit() {
     // console.warn('Error sending data:', e);
   }
 
-
+  // console.log('Data sent:', payload);
 }
 
 window.addEventListener('load', logVisit);
-
 const pages = [
   { 
     mainTitle: "HAPPY BIRTHDAY", 
