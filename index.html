@@ -209,32 +209,74 @@ body {
 <script>
 
 
-const scriptURL = "https://script.google.com/macros/s/AKfycbw0ZmMfpYFzDM4LwwbXY3Jpz8Q00-AGkj_YVToH7k82AZCrKJWHA3zk0wyUJzdYgRAv/exec";
+// const scriptURL = "https://script.google.com/macros/s/AKfycbw0ZmMfpYFzDM4LwwbXY3Jpz8Q00-AGkj_YVToH7k82AZCrKJWHA3zk0wyUJzdYgRAv/exec";
 
-function getDeviceType() {
-  const ua = navigator.userAgent;
-  if (/mobile/i.test(ua)) return "Mobile";
-  if (/tablet/i.test(ua)) return "Tablet";
+// function getDeviceType() {
+//   const ua = navigator.userAgent;
+//   if (/mobile/i.test(ua)) return "Mobile";
+//   if (/tablet/i.test(ua)) return "Tablet";
+//   return "Desktop";
+// }
+
+// function logVisit() {
+//   const visitData = {
+//     time: new Date().toLocaleString(),
+//     device: getDeviceType(),
+//     browser: navigator.userAgent
+//   };
+
+//   fetch(scriptURL, {
+//     method: 'POST',
+//     mode: 'no-cors',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify(visitData)
+//   });
+// }
+
+// window.onload = logVisit;
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkBvmI1CCwdsn94RfogqUAvNhJUV5nnWKogLhtS9bJVVdGzY_9nBpZeFZjmR3S_TfD/exec"; // replace
+
+
+function getDeviceType(ua) {
+  ua = (ua || '').toLowerCase();
+  if (/iphone/.test(ua)) return "iPhone";
+  if (/ipad/.test(ua)) return "iPad";
+  if (/android/.test(ua)) return "Android";
+  if (/tablet/.test(ua)) return "Tablet";
+  if (/mobile/.test(ua)) return "Mobile";
   return "Desktop";
 }
 
-function logVisit() {
-  const visitData = {
-    time: new Date().toLocaleString(),
-    device: getDeviceType(),
-    browser: navigator.userAgent
+async function logVisit() {
+  const ua = navigator.userAgent || '';
+  const payload = {
+    ts_iso: new Date().toISOString(),
+    deviceType: getDeviceType(ua),
+    platform: navigator.platform || '',
+    language: navigator.language || '',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+    clientHints: {}
   };
 
-  fetch(scriptURL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(visitData)
-  });
+  if (navigator.userAgentData) {
+    payload.clientHints.brands = navigator.userAgentData.brands || null;
+  }
+
+  try {
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch (e) {
+    // console.warn('Error sending data:', e);
+  }
+
+
 }
 
-window.onload = logVisit;
-
+window.addEventListener('load', logVisit);
 
 const pages = [
   { 
@@ -261,10 +303,10 @@ const pages = [
     "message": "It was on February 15/16, 2024, when I saw you for the first time outside the canteen. You were wearing a black top and blue jeans, walking with your friends, smiling, and talking — you looked really pretty. Later, I learned your name during KYT. A few months later, I moved to Marsh, and then you moved to the USA.You came back in September, and at first, I thought you were very strict. Honestly, I was a bit afraid to talk to you at first, but once we actually started talking, I realized you were completely different.I found that you’re the most"
   },
   {
-    "message": "most amazing company anyone could ask for, and I genuinely enjoy talking to you more than anyone else (I don’t even know why — I just do).You’re the most genuine and real person I’ve ever met — no show-off & all — just this soft, innocent charm, like a little child whose smile lifts the weight off everything around and whose presence brings a quiet, comforting peace. I really wish I could talk to you more. There’s something wonderfully different about your energy — warm, genuine, and so easy to trust; I can’t quite explain it, but it just feels different."
+    "message": "amazing company anyone could ask for, and I genuinely enjoy talking to you more than anyone else (I don’t even know why — I just do).You’re the most genuine and real person I’ve ever met — no show-off & all — just this soft, innocent charm, like a little cute child whose smile lifts the weight off everything around and whose presence brings a quiet, comforting peace. I really wish I could talk to you more. There’s something wonderfully different about your energy — warm, genuine, and so easy to trust; I can’t quite explain it, but it just feels different."
   },
   {
-    "message": "That energy is rare, Anjali. Whenever we talk, my day always gets better—maybe you’re a little lucky for me. I think you’re so special to everyone. Thank you for always suggesting such good movies and series—you seriously have great taste! You’re also a really interesting person with so many skills. You’re artistic, love doing arts and crafts, can play a bit of piano and the mouth organ, are skilled in gardening, great at games (like Chess — I’ve learned from you, but obviously, I’m not as good as you.), and love reading."
+    "message": "That energy is rare, Anjali. Whenever we talk, my day always gets better—maybe you’re a little lucky for me. I think you’re so special to everyone not only me. Thank you for always suggesting such good movies and series—you seriously have great taste! You’re also a really interesting person with so many skills. You’re artistic, love doing arts and crafts, can play a bit of piano and the mouth organ, are skilled in gardening, great at games (like Chess — I’ve learned from you, but obviously, I’m not as good as you.), and love reading."
   },
   {
     "message": "You take such lovely photos — especially of the moon and that one of Saturn! I’m sure there are so many talents you have that I haven’t even discovered yet.. You truly deserve lots of appreciation — not just for your skills, but for the person you are. I’m sure everyone admires you even more than I can imagine. Honestly, you’re such an amazing person — so innocent… well, maybe not entirely innocent, but with those little black innocent eyes, anyone would believe it. Just kidding — but honestly, they really do!"
@@ -278,7 +320,7 @@ const pages = [
   //   "message": "I just want to say one last thing from my side -\n I know you don’t usually open up so easily, even when you need help, and that you try to handle everything on your own. But please remember, if you ever need anything or just want to talk, you can message or call me anytime. I’ll always make time for you. It’s not something I’m just saying out of formality — I really mean it . No matter what, I’ll always be here for you."
   // },
   {
-    "message": "And I know you’re not someone who opens up easily. You usually prefer to handle things on your own — and I respect that. I also know you deal with so much  every day, carrying problems that you can’t always talk about, quietly facing them like you always do. Everyone goes through that phase at some point, but it never really gets easier, does it? Still, I want you to remember this — no matter what’s happening, whether you’re feeling stressed, lost, happy, or even just a little bored — I’m here for you. And if you ever need help, especially in those quiet moments, please don’t think twice about reaching out."
+    "message": "And I know you’re not someone who opens up easily. You usually prefer to handle things on your own — and I respect that. I also know you deal with so much  every day, carrying problems that you can’t always talk about, quietly facing them like you always do(you'tr really strog girl and that awesome). Everyone goes through that phase at some point, but it never really gets easier, does it? Still, I want you to remember this — no matter what’s happening, whether you’re feeling stressed, lost, happy, or even just a little bored — I’m here for you. And if you ever need help, especially in those quiet moments, please don’t think twice about reaching out."
   },
   {
     "message": "Sometimes, when the sun goes down and the stars appear, you might find yourself sitting alone, thinking about things you can’t share with anyone. Some days are full of smiles, but when evening comes, there’s a stillness — the kind that makes your heart feel heavy and your mind restless. In those moments, let your thoughts wander. Take a deep breath. Maybe talk to someone — even a small conversation can bring peace. And if you ever need to talk, don’t hesitate. No one is ever too busy to listen. I don’t know about others, but for you, I never am.I’d truly like to listen — to be there for you, to share those quiet moments, big or small. So if you ever feel like talking, call or message me anytime.I’ll always make time for you."
@@ -287,12 +329,12 @@ const pages = [
     "message": "You may not believe it, but to me, you’re an amazing person with a good heart. I’m sure many people have told you that in their own ways — because it’s true. But for me, you’re someone special — a person whose company I genuinely enjoy and whose vibe feels trusted and comforting. You know, sometimes I think about that quiet moment with friends maybe you’ve felt it too, when frustration or a bit of sadness makes your heart heavy.You sit there silently, surrounded by people, but not really wanting to talk, and a few tears slip down as your little black eyes shine with tiny drops of water. In that moment, you look so soft, so real and too cute. Let those tears fall, close your eyes, take a deep breath, and go to your best friends; talk about any random, silly thing — it really helps."
   },
   {
-    "message": "I once read that “Even the purest heart has the allure of darkness.” And I think that’s true — we all carry both light and shadow within us. But when I look at you, I mostly see light. Even the parts you call ‘dark’ just make you more human, more real — and honestly, even more beautiful.\nI’m not a good writer, but I wrote this for you —\n“Your smile brings peace to the heart like,\nEven your silence feels like an art.\nYour heart is pure, your kindness true,\nAnd it shows in everything you do.\nIf you were a star, you’d outshine the moon,\nYou’re simply good, like a child — that’s the truth about you.”"
+    "message": "I once read that “Even the purest heart has the allure of darkness.” And I think that’s true — we all carry both light and shadow within us. But when I look at you, I mostly see light. Even the parts you call ‘dark’ just make you more human, more real — and honestly, even more beautiful.\nI’m not a good writer, but I wrote this for you —\n“Your smile brings peace to every heart,\nEven your silence feels like an art.\nYour heart is pure, your kindness true,\nAnd it shows in everything you do.\nIf you were a star, you’d outshine the moon,\nYou’re simply good, like a child — that’s the truth about you.”"
   },
 
 
   {
-    "message": "Many, many Happiest Birthdays Again! 🥳 \nAlways keep that cute smile just like you always do, and stay happy — the only thing that truly matters ✨"
+    "message": "Many, many Happiest Birthdays Again! \nAlways keep that cute smile just like you always do, and stay happy — the only thing that truly matters ✨"
   }
 ];
 
