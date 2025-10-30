@@ -136,13 +136,43 @@ body {
   letter-spacing: 0.3px;
 }
 
-/* Sparkle Animation */
-.sparkle { pointer-events: none; position: absolute; inset: 0; z-index: 10; overflow: hidden; }
-.particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(180deg, #fff8de, #f7e6b9); opacity: 0; animation: sparkle 1000ms linear forwards; box-shadow: 0 2px 6px rgba(191,160,122,0.4); }
-@keyframes sparkle {
-  0% { opacity: 0; transform: translateY(10px) scale(0.6) rotate(0deg); }
-  25% { opacity: 1; transform: translateY(-8px) scale(1.1) rotate(8deg); }
-  100% { opacity: 0; transform: translateY(-40px) scale(0.4) rotate(20deg); }
+/* === SPARKLE ANIMATION (soft fall effect) === */
+.sparkle {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #fffbe0 10%, #f6d98a 60%, #d4a64f 90%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  opacity: 0;
+  animation: sparkleFall 3.8s ease-in forwards;
+}
+
+@keyframes sparkleFall {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.5) rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0px) scale(0.9) rotate(10deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(120px) rotate(30deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(220px) scale(1) rotate(50deg);
+  }
 }
 
 /* Butterfly Animation */
@@ -191,6 +221,48 @@ body {
   }
   .mobile-note { display: block; text-align: center; width: 90vw; }
 }
+
+/* === WARM EMOTIONAL VINTAGE FONT SETUP === */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Parisienne&display=swap');
+
+/* === PAGE TEXT STYLE === */
+.page .note, .cover .note {
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  line-height: 1.9;
+  max-width: 82%;
+  text-align: center;
+  margin-top: 25px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: #3b2414;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.3);
+}
+
+/* === MAIN TITLE (Soft, Graceful, Heartfelt) === */
+.cover .main-title {
+  font-size: clamp(2.8rem, 7vw, 4.3rem);
+  font-family: 'Parisienne', 'Cormorant Garamond', cursive;
+  font-weight: 400;
+  color: #402918;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 4px rgba(255,255,255,0.5);
+  margin-bottom: 25px;
+  font-style: normal;
+}
+
+/* === SUBTITLE (Elegant and Emotional Accent) === */
+.cover .subtitle {
+  font-size: clamp(1.4rem, 5vw, 2.1rem);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: #4c3120;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.5);
+  margin-top: 8px;
+}
+
 </style>
 </head>
 
@@ -337,9 +409,11 @@ const pages = [
     "message": "I once read that “Even the purest heart has the allure of darkness.” And I think that’s true — we all carry both light and shadow within us. But when I look at you, I mostly see light. Even the parts you call ‘dark’ just make you more human, more real — and honestly, even more beautiful.\nI’m not a good writer, but I wrote this for you —\n“Your smile brings peace to every heart,\nEven your silence feels like an art.\nYour heart is pure, your kindness true,\nAnd it shows in everything you do.\nIf you were a star, you’d outshine the moon,\nYou’re simply good, like a child — that’s the truth about you.”"
   },
 
-
   {
-    "message": "Many, many Happiest Birthdays Again! \nAlways keep that cute smile just like you always do, and stay happy — the only thing that truly matters ✨"
+  "message": "I just wanna say one last thing from my side, and please remember this always — I know I can’t solve everything or make every problem disappear; no one really can — some battles you’re meant to face on your own. But I’ll always try to be there — to listen, to talk, and to make sure you never feel alone. You can share anything with me, trust me, anything — whether it’s something random or something that truly matters. And if you don’t like my company, that’s absolutely fine — just be with whoever’s company you enjoy, because all I really want is to see you happy, with lots of smiles. Never feel like you don’t have anyone by your side — you’re never truly alone. I just wanna be someone you can rely on — not perfect, but always real."
+},
+  {
+    "message": "THE END\n\nMany, many Happiest Birthdays Again! \nAlways keep that cute smile just like you always do, and stay happy — the only thing that truly matters ✨"
   }
 ];
 
@@ -374,17 +448,19 @@ function showButterfly() {
     setTimeout(() => butterfly.remove(), 4500);
   }
 }
-
-function showSparkle(){
-  sparkle.innerHTML='';
-  for(let i=0;i<6;i++){
-    const el=document.createElement('div'); 
-    el.className='particle';
-    el.style.left=(20+Math.random()*60)+'%';
-    el.style.top=(40+Math.random()*30)+'%';
-    el.style.animationDelay=(i*80)+'ms';
+function showSparkle() {
+  sparkle.innerHTML = '';
+  const count = 20; // more visible sparkles
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'particle';
+    el.style.left = (10 + Math.random() * 80) + '%';
+    el.style.top = (-20 - Math.random() * 20) + 'px'; // start above page
+    el.style.animationDelay = (Math.random() * 1.2) + 's';
+    el.style.width = (5 + Math.random() * 8) + 'px';
+    el.style.height = el.style.width;
     sparkle.appendChild(el);
-    setTimeout(()=>{el.remove();},1400);
+    setTimeout(() => { el.remove(); }, 4200);
   }
 }
 
