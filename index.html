@@ -5,221 +5,250 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vintage Birthday Flipbook</title>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
-
 <style>
 @font-face {
-  font-family: 'Halimun';
-  src: url('halimun-font/Halimun-W7jn.ttf') format('truetype');
+   font-family: 'Halimun';
+ src: url('halimun-font/Halimun-W7jn.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'PerfectoCalligraphy';
-  src: url('perfecto-calligraphy-personal-use/PerfectoCalligraphy.ttf') format('truetype');
+ font-family: 'PerfectoCalligraphy';
+ src: url('perfecto-calligraphy-personal-use/PerfectoCalligraphy.ttf') format('truetype');
 }
 
 :root {
-  --page-width: min(760px, 95vw);
-  --page-height: calc(var(--page-width) * 0.75);
-  --shadow: rgba(0,0,0,0.36);
+ --page-width: min(760px, 95vw);
+ --page-height: calc(var(--page-width) * 0.75);
+ --shadow: rgba(0,0,0,0.36);
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #fdf6ed 0%, #d2b48c 85%);
-  font-family: 'IM Fell English', serif;
-  overflow-x: hidden;
+ margin: 0;
+ padding: 0;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: flex-start;
+ min-height: 100vh;
+ background: linear-gradient(180deg, #fdf6ed 0%, #d2b48c 85%);
+ font-family: 'IM Fell English', serif;
+ overflow-x: hidden;
 }
 
 .scene {
-  width: var(--page-width);
-  height: var(--page-height);
-  perspective: 1500px;
-  position: relative;
+ width: var(--page-width);
+ height: var(--page-height);
+ perspective: 1500px;
+ position: relative;
 }
 
 .book {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
+ width: 100%;
+ height: 100%;
+ position: relative;
+ transform-style: preserve-3d;
 }
 
 .page-wrap {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
+ position: absolute;
+ inset: 0;
+ display: flex;
+ justify-content: center;
 }
 
 .page {
-  width: 100%;
-  height: 100%;
-  padding: 28px 24px;
-  border-radius: 16px;
-  box-shadow: 0 28px 60px var(--shadow), 0 8px 18px rgba(0,0,0,0.18),
-              inset 0 2px 0 rgba(255,255,255,0.08),
-              inset 0 0 0 1px rgba(58,43,31,0.12);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background: url('image.png') no-repeat center/cover;
-  background-color: #f3e6cd;
-  background-blend-mode: multiply;
-  transition: transform 1s cubic-bezier(.2,.8,.12,1);
-  opacity: 0;
+ width: 100%;
+ height: 100%;
+ padding: 28px 24px;
+ border-radius: 16px;
+ box-shadow: 0 28px 60px var(--shadow), 0 8px 18px rgba(0,0,0,0.18),
+       inset 0 2px 0 rgba(255,255,255,0.08),
+       inset 0 0 0 1px rgba(58,43,31,0.12);
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ text-align: center;
+ /* Existing background image setup */
+ background: url('image.png') no-repeat center/cover;
+ background-color: #f3e6cd;
+ background-blend-mode: multiply;
+ transition: transform 1s cubic-bezier(.2,.8,.12,1);
+ opacity: 0;
+ position: relative; /* Needed for absolute positioning of media */
 }
 
 .page.visible {
-  opacity: 1;
-  transition: opacity 0.8s ease;
+ opacity: 1;
+ transition: opacity 0.8s ease;
+}
+
+/* New: Media Overlay Styles */
+.page-media {
+ position: absolute;
+ inset: 0;
+ z-index: 5; /* Below text content but above background */
+ overflow: hidden;
+ opacity: 0.15; /* Increased opacity for better visibility */
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+
+.page-media img {
+ width: 100%;
+ height: 100%;
+ object-fit: cover; /* CHANGED: Now the image/GIF will cover the entire area */
+ /* Removed the filter for full color and clearer visibility */
+}
+@media (max-width: 640px) {
+ :root {
+  --page-width: 95vw;
+  --page-height: calc(95vw * 1.6); /* Adjusted ratio from 1.85 to 1.6 or similar */
+ }
+ .mobile-note { display: block; text-align: center; width: 90vw; }
 }
 
 /* Cover Page */
 .cover {
-  background: url('cover.jpg') no-repeat center/cover;
-  background-size: cover;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-  color: #3a2b1f;
-  padding: 40px 20px;
+ background: url('cover.jpg') no-repeat center/cover;
+ background-size: cover;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+ color: #3a2b1f;
+ padding: 40px 20px;
 }
 
 .cover .main-title {
-  font-size: clamp(2.5rem, 7vw, 4rem);
-  font-family: 'IM Fell English', serif;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  font-weight: 600;
-  margin-bottom: 25px;
+ font-size: clamp(2.5rem, 7vw, 4rem);
+ font-family: 'IM Fell English', serif;
+ text-transform: uppercase;
+ letter-spacing: 4px;
+ font-weight: 600;
+ margin-bottom: 25px;
 }
 
 .cover .person-img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid #3a2b1f;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+ width: 150px;
+ height: 150px;
+ border-radius: 50%;
+ overflow: hidden;
+ border: 4px solid #3a2b1f;
+ margin-bottom: 20px;
+ box-shadow: 0 4px 14px rgba(0,0,0,0.25);
 }
 
 .cover .person-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
 }
 
 .cover .subtitle {
-  font-size: clamp(1.25rem, 5.5vw, 2rem);
-  margin-top: 10px;
-  font-style: italic;
+ font-size: clamp(1.25rem, 5.5vw, 2rem);
+ margin-top: 10px;
+ font-style: italic;
 }
 
 .page .note, .cover .note {
-  font-size: clamp(1rem, 4vw, 1.5rem);
-  line-height: 1.8;
-  max-width: 82%;
-  text-align: center;
-  margin-top: 25px;
-  font-family: 'IM Fell English', serif;
-  letter-spacing: 0.3px;
+ font-size: clamp(1rem, 4vw, 1.5rem);
+ line-height: 1.8;
+ max-width: 82%;
+ text-align: center;
+ margin-top: 25px;
+ font-family: 'IM Fell English', serif;
+ letter-spacing: 0.3px;
+ z-index: 10; /* Ensure text is above the media overlay */
+ position: relative; /* Bring text to the front */
 }
 
 /* === SPARKLE ANIMATION (soft fall effect) === */
 .sparkle {
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  overflow: hidden;
+ pointer-events: none;
+ position: absolute;
+ inset: 0;
+ z-index: 10;
+ overflow: hidden;
 }
 
 .particle {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: radial-gradient(circle at center, #fffbe0 10%, #f6d98a 60%, #d4a64f 90%);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  opacity: 0;
-  animation: sparkleFall 3.8s ease-in forwards;
+ position: absolute;
+ width: 10px;
+ height: 10px;
+ border-radius: 50%;
+ background: radial-gradient(circle at center, #fffbe0 10%, #f6d98a 60%, #d4a64f 90%);
+ box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+ opacity: 0;
+ animation: sparkleFall 3.8s ease-in forwards;
 }
 
 @keyframes sparkleFall {
-  0% {
-    opacity: 0;
-    transform: translateY(-40px) scale(0.5) rotate(0deg);
-  }
-  10% {
-    opacity: 1;
-    transform: translateY(0px) scale(0.9) rotate(10deg);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(120px) rotate(30deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(220px) scale(1) rotate(50deg);
-  }
+ 0% {
+  opacity: 0;
+  transform: translateY(-40px) scale(0.5) rotate(0deg);
+ }
+ 10% {
+  opacity: 1;
+  transform: translateY(0px) scale(0.9) rotate(10deg);
+ }
+ 50% {
+  opacity: 1;
+  transform: translateY(120px) rotate(30deg);
+ }
+ 100% {
+  opacity: 0;
+  transform: translateY(220px) scale(1) rotate(50deg);
+ }
 }
 
 /* Butterfly Animation */
 .butterfly {
-  position: absolute;
-  width: 55px;
-  height: 55px;
-  opacity: 0;
-  background: url('ddapzle-c7909979-452f-44b2-a03e-d206fcf49d3b.gif') no-repeat center/contain;
-  pointer-events: none;
-  filter: drop-shadow(0 3px 5px rgba(0,0,0,0.25));
-  animation: vintageButterflyFly var(--duration) ease-in-out forwards;
-  transform-origin: center;
-  z-index: 15;
+ position: absolute;
+ width: 55px;
+ height: 55px;
+ opacity: 0;
+ background: url('ddapzle-c7909979-452f-44b2-a03e-d206fcf49d3b.gif') no-repeat center/contain;
+ pointer-events: none;
+ filter: drop-shadow(0 3px 5px rgba(0,0,0,0.25));
+ animation: vintageButterflyFly var(--duration) ease-in-out forwards;
+ transform-origin: center;
+ z-index: 15;
 }
 
 @keyframes vintageButterflyFly {
-  0% { opacity: 0; transform: translate(var(--start-x), var(--start-y)) scale(0.85) rotate(0deg); }
-  10% { opacity: 0.8; }
-  40% { transform: translate(var(--mid-x), var(--mid-y)) scale(1) rotate(var(--r1)); opacity: 1; }
-  70% { transform: translate(var(--end-x), var(--end-y)) scale(1) rotate(var(--r2)); opacity: 0.9; }
-  100% { opacity: 0; transform: translate(calc(var(--end-x) * 1.2), calc(var(--end-y) * 1.1)) scale(0.9) rotate(var(--r3)); }
+ 0% { opacity: 0; transform: translate(var(--start-x), var(--start-y)) scale(0.85) rotate(0deg); }
+ 10% { opacity: 0.8; }
+ 40% { transform: translate(var(--mid-x), var(--mid-y)) scale(1) rotate(var(--r1)); opacity: 1; }
+ 70% { transform: translate(var(--end-x), var(--end-y)) scale(1) rotate(var(--r2)); opacity: 0.9; }
+ 100% { opacity: 0; transform: translate(calc(var(--end-x) * 1.2), calc(var(--end-y) * 1.1)) scale(0.9) rotate(var(--r3)); }
 }
 
 /* Mobile Swipe Note */
 .mobile-note {
-  position: fixed;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: transparent;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-family: 'IM Fell English', serif;
-  color: #2e2218;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.6);
-  z-index: 50;
-  display: none;
+ position: fixed;
+ bottom: 18px;
+ left: 50%;
+ transform: translateX(-50%);
+ background: transparent;
+ padding: 8px 12px;
+ border-radius: 10px;
+ font-size: 1rem;
+ font-family: 'IM Fell English', serif;
+ color: #2e2218;
+ text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+ z-index: 50;
+ display: none;
 }
 
 @media (max-width: 640px) {
-  :root {
-    --page-width: 95vw;
-    --page-height: calc(95vw * 1.85);
-  }
-  .mobile-note { display: block; text-align: center; width: 90vw; }
+ :root {
+  --page-width: 95vw;
+  --page-height: calc(95vw * 1.85);
+ }
+ .mobile-note { display: block; text-align: center; width: 90vw; }
 }
 
 /* === WARM EMOTIONAL VINTAGE FONT SETUP === */
@@ -227,40 +256,40 @@ body {
 
 /* === PAGE TEXT STYLE === */
 .page .note, .cover .note {
-  font-size: clamp(1rem, 4vw, 1.5rem);
-  line-height: 1.9;
-  max-width: 82%;
-  text-align: center;
-  margin-top: 25px;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  color: #3b2414;
-  text-shadow: 0 1px 1px rgba(255,255,255,0.3);
+ font-size: clamp(1rem, 4vw, 1.5rem);
+ line-height: 1.9;
+ max-width: 82%;
+ text-align: center;
+ margin-top: 25px;
+ font-family: 'Cormorant Garamond', serif;
+ font-style: italic;
+ font-weight: 500;
+ letter-spacing: 0.3px;
+ color: #3b2414;
+ text-shadow: 0 1px 1px rgba(255,255,255,0.3);
 }
 
 /* === MAIN TITLE (Soft, Graceful, Heartfelt) === */
 .cover .main-title {
-  font-size: clamp(2.8rem, 7vw, 4.3rem);
-  font-family: 'Parisienne', 'Cormorant Garamond', cursive;
-  font-weight: 400;
-  color: #402918;
-  letter-spacing: 2px;
-  text-shadow: 1px 1px 4px rgba(255,255,255,0.5);
-  margin-bottom: 25px;
-  font-style: normal;
+ font-size: clamp(2.8rem, 7vw, 4.3rem);
+ font-family: 'Parisienne', 'Cormorant Garamond', cursive;
+ font-weight: 400;
+ color: #402918;
+ letter-spacing: 2px;
+ text-shadow: 1px 1px 4px rgba(255,255,255,0.5);
+ margin-bottom: 25px;
+ font-style: normal;
 }
 
 /* === SUBTITLE (Elegant and Emotional Accent) === */
 .cover .subtitle {
-  font-size: clamp(1.4rem, 5vw, 2.1rem);
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  color: #4c3120;
-  letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-  margin-top: 8px;
+ font-size: clamp(1.4rem, 5vw, 2.1rem);
+ font-family: 'Cormorant Garamond', serif;
+ font-style: italic;
+ color: #4c3120;
+ letter-spacing: 0.5px;
+ text-shadow: 0 1px 2px rgba(255,255,255,0.5);
+ margin-top: 8px;
 }
 
 </style>
@@ -269,11 +298,11 @@ body {
 <body>
 
 <div class="scene">
-  <div class="book" id="book">
-    <div class="page-wrap" id="pageWrap"></div>
-    <div class="sparkle" id="sparkle"></div>
-  </div>
-  <div class="butterfly-container" id="butterflyContainer"></div>
+ <div class="book" id="book">
+  <div class="page-wrap" id="pageWrap"></div>
+  <div class="sparkle" id="sparkle"></div>
+ </div>
+ <div class="butterfly-container" id="butterflyContainer"></div>
 </div>
 
 <div class="mobile-note">Swipe left or right to turn pages</div>
@@ -281,113 +310,84 @@ body {
 <script>
 
 
-// const scriptURL = "https://script.google.com/macros/s/AKfycbw0ZmMfpYFzDM4LwwbXY3Jpz8Q00-AGkj_YVToH7k82AZCrKJWHA3zk0wyUJzdYgRAv/exec";
-
-// function getDeviceType() {
-//   const ua = navigator.userAgent;
-//   if (/mobile/i.test(ua)) return "Mobile";
-//   if (/tablet/i.test(ua)) return "Tablet";
-//   return "Desktop";
-// }
-
-// function logVisit() {
-//   const visitData = {
-//     time: new Date().toLocaleString(),
-//     device: getDeviceType(),
-//     browser: navigator.userAgent
-//   };
-
-//   fetch(scriptURL, {
-//     method: 'POST',
-//     mode: 'no-cors',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(visitData)
-//   });
-// }
-
-// window.onload = logVisit;
+// Log Visit Script (Left Unmodified)
 const scriptURL = "https://script.google.com/macros/s/AKfycbycyLpNeLB1EKDR1ET7kBkG9z2mn41H9a6BuwNdVDWXR8yICX7Vr_NXnvfQVDWYZhNZ/exec"; // replace
 
 function getDeviceType() {
-  const ua = navigator.userAgent;
+ const ua = navigator.userAgent;
 
-  if (/iphone/.test(ua)) return "iPhone";
-  if (/ipad/.test(ua)) return "iPad";
-  if (/android/.test(ua)) return "Android";
-  if (/tablet/.test(ua)) return "Tablet";
-  if (/mobile/.test(ua)) return "Mobile";
-  return "Desktop";
+ if (/iphone/.test(ua)) return "iPhone";
+ if (/ipad/.test(ua)) return "iPad";
+ if (/android/.test(ua)) return "Android";
+ if (/tablet/.test(ua)) return "Tablet";
+ if (/mobile/.test(ua)) return "Mobile";
+ return "Desktop";
 }
 
 async function getPublicIP() {
-  try {
-    const res = await fetch("https://api.ipify.org?format=json");
-    const data = await res.json();
-    return data.ip;
-  } catch (err) {
-    // console.error("IP fetch failed", err);
-    return "";
-  }
+ try {
+  const res = await fetch("https://api.ipify.org?format=json");
+  const data = await res.json();
+  return data.ip;
+ } catch (err) {
+  // console.error("IP fetch failed", err);
+  return "";
+ }
 }
 
 async function logVisit() {
-  const ip = await getPublicIP();
-  const visitData = {
-    ts_iso: new Date().toISOString(),
-    deviceType: getDeviceType(),
-    platform: navigator.platform,
-    language: navigator.language,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    userAgent: navigator.userAgent,
-    ip: ip
-  };
+ const ip = await getPublicIP();
+ const visitData = {
+  ts_iso: new Date().toISOString(),
+  deviceType: getDeviceType(),
+  platform: navigator.platform,
+  language: navigator.language,
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  userAgent: navigator.userAgent,
+  ip: ip
+ };
 
-  await fetch(scriptURL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(visitData)
-  });
+ await fetch(scriptURL, {
+  method: 'POST',
+  mode: 'no-cors',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(visitData)
+ });
 }
 
 window.onload = logVisit;
 
 
-
-
+// Pages Array with new 'mediaUrl' property
 const pages = [
-  { 
-    mainTitle: "HAPPY BIRTHDAY", 
-    subtitle: "Anjali Chandwani", 
-    message: "Wishing you a day filled with joy, laughter, and unforgettable memories. You deserve all the happiness in the world today and always.",
-    personImg: "front_photo.png" 
-  },
- 
-  //   {
-  //   "message": "Hey,\nI just wanted to say that you’re honestly the best company I could ever have. I really enjoy talking to you — more than anyone else. I don’t even know why; maybe it’s because of the amazing energy you carry. That’s something truly rare, and it’s one of the many things I really appreciate about you. You’re always special to everyone (and I’m sure a lot of people have told you that already)."
-  // },
+ { 
+  mainTitle: "HAPPY BIRTHDAY", 
+  subtitle: "Anjali Chandwani", 
+  message: "Wishing you a day filled with joy, laughter, and unforgettable memories. You deserve all the happiness in the world today and always.",
+  personImg: "front_photo.png" 
+ },
 
-  // {
-  //   "message": "Thank you for always suggesting such good movies and series — you seriously have great taste! And of course, thanks for teaching me chess! I had no idea how to play before, but now at least I can play a little — all thanks to you. 😂 You’re genuinely a wonderful person and a very special friend."
-  // },
-  // {
-  //   "message": "You have so many talents — you’re artistic, love doing art and craft, can play a bit of piano and the mouth organ, skilled in gardening, great at games, hardworking, and love reading. You even take really nice photos — especially of the moon and the solar system! I just realized how talented you truly are. Seriously, you’re amazing — keep it up and never stop being the wonderful person you are. 🌙✨"
-  // },
-  {
-    "message": "For the Sweet & Wonderful Person\n----------------\n\nThis is about a sweet and wonderful girl — someone truly special, even if she doesn’t always realize just how rare and amazing she really is."
+ {
+  "message": "For the Sweet & Wonderful Person\n----------------\n\nThis is about a sweet and wonderful girl — someone truly special, even if she doesn’t always realize just how rare and amazing she really is.",
+ 
+ },
+ {
+  "message": "It was on February 15/16, 2024, when I saw you for the first time outside the canteen. You were wearing a black top and blue jeans, walking with your friends, smiling, and talking — you looked really pretty. Later, I learned your name during KYT. A few months later, I moved to Marsh, and then you moved to the USA.You came back in September, and at first, I thought you were very strict. Honestly, I was a bit afraid to talk to you at first, but once we actually started talking, I realized you were completely different.I found that you’re the most"
+  , "mediaUrl": "walking_girl.png" 
+},
+ {
+  "message": "amazing company anyone could ask for, and I genuinely enjoy talking to you more than anyone else (I don’t even know why — I just do).You’re the most genuine and real person I’ve ever met — no show-off & all — just this soft, innocent charm, like a little cute child whose smile lifts the weight off everything around and whose presence brings a quiet, comforting peace. I really wish I could talk to you more. There’s something wonderfully different about your energy — warm, genuine, and so easy to trust; I can’t quite explain it, but it just feels different."
+ },
+ {
+  "message": "That energy is rare, Anjali. Whenever we talk, my day always gets better—maybe you’re a little lucky for me. Thank you for always suggesting such good movies and series—you seriously have great taste! You’re also a really interesting person with so many skills. You’re artistic, love doing arts and crafts, can play a bit of piano and the mouth organ, are skilled in gardening, great at games (like Chess — I’ve learned from you, but obviously, I’m not as good as you.), and love reading.",
+ 
+ },
+ {
+    "message": "You take such lovely photos — especially of the moon and that one of Saturn! I’m sure there are so many talents you have that I haven’t even discovered yet.I’m really curious to know more about you — I don’t know if I’ll ever get the chance, but honestly, I’d like to. You truly deserve lots of appreciation — not just for your skills, but for the person you are. I’m sure everyone admires you even more than I can imagine. Honestly, you’re such an amazing person — so innocent… well, maybe not entirely innocent, but with those little black innocent eyes, anyone would believe it. Just kidding — but honestly, they really do!"
+    ,"mediaUrl": "moon_an.png"  
   },
-  {
-    "message": "It was on February 15/16, 2024, when I saw you for the first time outside the canteen. You were wearing a black top and blue jeans, walking with your friends, smiling, and talking — you looked really pretty. Later, I learned your name during KYT. A few months later, I moved to Marsh, and then you moved to the USA.You came back in September, and at first, I thought you were very strict. Honestly, I was a bit afraid to talk to you at first, but once we actually started talking, I realized you were completely different.I found that you’re the most"
-  },
-  {
-    "message": "amazing company anyone could ask for, and I genuinely enjoy talking to you more than anyone else (I don’t even know why — I just do).You’re the most genuine and real person I’ve ever met — no show-off & all — just this soft, innocent charm, like a little cute child whose smile lifts the weight off everything around and whose presence brings a quiet, comforting peace. I really wish I could talk to you more. There’s something wonderfully different about your energy — warm, genuine, and so easy to trust; I can’t quite explain it, but it just feels different."
-  },
-  {
-    "message": "That energy is rare, Anjali. Whenever we talk, my day always gets better—maybe you’re a little lucky for me. I think you’re so special to everyone not only me. Thank you for always suggesting such good movies and series—you seriously have great taste! You’re also a really interesting person with so many skills. You’re artistic, love doing arts and crafts, can play a bit of piano and the mouth organ, are skilled in gardening, great at games (like Chess — I’ve learned from you, but obviously, I’m not as good as you.), and love reading."
-  },
-  {
-    "message": "You take such lovely photos — especially of the moon and that one of Saturn! I’m sure there are so many talents you have that I haven’t even discovered yet.. You truly deserve lots of appreciation — not just for your skills, but for the person you are. I’m sure everyone admires you even more than I can imagine. Honestly, you’re such an amazing person — so innocent… well, maybe not entirely innocent, but with those little black innocent eyes, anyone would believe it. Just kidding — but honestly, they really do!"
-  },
+
+
   {"message":"Sometimes, I catch that quiet sadness behind your smile, even when you’re trying to look okay. I don’t know why others don’t see it, but somehow, I do. There are moments I want to ask if you’re alright, but the words don’t come out — and when I finally do, you say you’re fine, even though I can feel you’re not. Maybe you think I wouldn’t understand… maybe you’re right, or maybe not. But still, if you ever feel like talking — about anything at all — I’m here. Trust me, I’m a good listener, and I always will be."},
   {
     "message": "I thought this quote suits you perfectly —\n“She carries a quiet kind of magic — the kind that doesn’t seek attention, but leaves everything she touches a little more beautiful, a little more alive.”\n- Butterflies Rising"
@@ -397,10 +397,11 @@ const pages = [
   //   "message": "I just want to say one last thing from my side -\n I know you don’t usually open up so easily, even when you need help, and that you try to handle everything on your own. But please remember, if you ever need anything or just want to talk, you can message or call me anytime. I’ll always make time for you. It’s not something I’m just saying out of formality — I really mean it . No matter what, I’ll always be here for you."
   // },
   {
-    "message": "And I know you’re not someone who opens up easily. You usually prefer to handle things on your own — and I respect that. I also know you deal with so much  every day, carrying problems that you can’t always talk about, quietly facing them like you always do(you'tr really strog girl and that awesome). Everyone goes through that phase at some point, but it never really gets easier, does it? Still, I want you to remember this — no matter what’s happening, whether you’re feeling stressed, lost, happy, or even just a little bored — I’m here for you. And if you ever need help, especially in those quiet moments, please don’t think twice about reaching out."
+    "message": "And I know you’re not someone who opens up easily. You usually prefer to handle things on your own — and I respect that. I also know you deal with so much  every day, carrying problems that you can’t always talk about, quietly facing them like you always do(you'tr really strong girl and that awesome). Everyone goes through that phase at some point, but it never really gets easier, does it? Still, I want you to remember this — no matter what’s happening, whether you’re feeling stressed, lost, happy, or even just a little bored — I’m here for you. And if you ever need help, especially in those quiet moments, please don’t think twice about reaching out."
   },
   {
-    "message": "Sometimes, when the sun goes down and the stars appear, you might find yourself sitting alone, thinking about things you can’t share with anyone. Some days are full of smiles, but when evening comes, there’s a stillness — the kind that makes your heart feel heavy and your mind restless. In those moments, let your thoughts wander. Take a deep breath. Maybe talk to someone — even a small conversation can bring peace. And if you ever need to talk, don’t hesitate. No one is ever too busy to listen. I don’t know about others, but for you, I never am.I’d truly like to listen — to be there for you, to share those quiet moments, big or small. So if you ever feel like talking, call or message me anytime.I’ll always make time for you."
+    "message": "Sometimes, when the sun goes down and the stars appear, you might find yourself sitting alone, thinking about things you can’t share with anyone. Some days are full of smiles, but when evening comes, there’s a stillness — the kind that makes your heart feel heavy and your mind restless. In those moments, let your thoughts wander. Take a deep breath. Maybe talk to someone — even a small conversation can bring peace. And if you ever need to talk, don’t hesitate. No one is ever too busy to listen. I don’t know about others, but for you, I never am.I’d truly like to listen — to be there for you, to share those quiet moments, big or small. So if you ever feel like talking, call or message me anytime.I’ll always make time for you — that’s my promise."
+    ,"mediaUrl": "sitting_moon.png" 
   },
   {
     "message": "You may not believe it, but to me, you’re an amazing person with a good heart. I’m sure many people have told you that in their own ways — because it’s true. But for me, you’re someone special — a person whose company I genuinely enjoy and whose vibe feels trusted and comforting. You know, sometimes I think about that quiet moment with friends maybe you’ve felt it too, when frustration or a bit of sadness makes your heart heavy.You sit there silently, surrounded by people, but not really wanting to talk, and a few tears slip down as your little black eyes shine with tiny drops of water. In that moment, you look so soft, so real and too cute. Let those tears fall, close your eyes, take a deep breath, and go to your best friends; talk about any random, silly thing — it really helps."
@@ -413,8 +414,10 @@ const pages = [
   "message": "I just wanna say one last thing from my side, and please remember this always — I know I can’t solve everything or make every problem disappear; no one really can — some battles you’re meant to face on your own. But I’ll always try to be there — to listen, to talk, and to make sure you never feel alone. You can share anything with me, trust me, anything — whether it’s something random or something that truly matters. And if you don’t like my company, that’s absolutely fine — just be with whoever’s company you enjoy, because all I really want is to see you happy, with lots of smiles. Never feel like you don’t have anyone by your side — you’re never truly alone. I just wanna be someone you can rely on — not perfect, but always real."
 },
   {
-    "message": "THE END\n\nMany, many Happiest Birthdays Again! \nAlways keep that cute smile just like you always do, and stay happy — the only thing that truly matters ✨"
+    "message": "AT THE END\n\nMany, many Happiest Birthdays Again! \nAlways keep that cute smile just like you always do, and stay happy — the only thing that truly matters ✨"
   }
+
+
 ];
 
 let index = 0;
@@ -424,95 +427,107 @@ const sparkle = document.getElementById('sparkle');
 
 function escapeHtml(str){ if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\r?\n/g,'<br/>'); }
 
+// Animation functions (left unmodified)
 function showButterfly() {
-  const container = document.getElementById('butterflyContainer');
-  const count = Math.floor(Math.random() * 2) + 2; // 2–3 butterflies
-  for (let i = 0; i < count; i++) {
-    const butterfly = document.createElement('div');
-    butterfly.className = 'butterfly';
-    const duration = (3.2 + Math.random() * 1.0) + 's';
-    butterfly.style.setProperty('--duration', duration);
-    butterfly.style.left = (10 + Math.random() * 80) + '%';
-    butterfly.style.bottom = '-60px';
-    butterfly.style.setProperty('--start-x', (Math.random() * 200 - 100) + 'px');
-    butterfly.style.setProperty('--start-y', (Math.random() * 80 + 500) + 'px');
-    butterfly.style.setProperty('--mid-x', (Math.random() * 200 - 100) + 'px');
-    butterfly.style.setProperty('--mid-y', (-100 - Math.random() * 100) + 'px');
-    butterfly.style.setProperty('--end-x', (Math.random() * 200 - 100) + 'px');
-    butterfly.style.setProperty('--end-y', (-250 - Math.random() * 150) + 'px');
-    butterfly.style.setProperty('--r1', (Math.random() * 20 - 10) + 'deg');
-    butterfly.style.setProperty('--r2', (Math.random() * 25 - 15) + 'deg');
-    butterfly.style.setProperty('--r3', (Math.random() * 30 - 10) + 'deg');
-    butterfly.style.animationDelay = (Math.random() * 0.5) + 's';
-    container.appendChild(butterfly);
-    setTimeout(() => butterfly.remove(), 4500);
-  }
+ const container = document.getElementById('butterflyContainer');
+ const count = Math.floor(Math.random() * 2) + 2; // 2–3 butterflies
+ for (let i = 0; i < count; i++) {
+  const butterfly = document.createElement('div');
+  butterfly.className = 'butterfly';
+  const duration = (3.2 + Math.random() * 1.0) + 's';
+  butterfly.style.setProperty('--duration', duration);
+  butterfly.style.left = (10 + Math.random() * 80) + '%';
+  butterfly.style.bottom = '-60px';
+  butterfly.style.setProperty('--start-x', (Math.random() * 200 - 100) + 'px');
+  butterfly.style.setProperty('--start-y', (Math.random() * 80 + 500) + 'px');
+  butterfly.style.setProperty('--mid-x', (Math.random() * 200 - 100) + 'px');
+  butterfly.style.setProperty('--mid-y', (-100 - Math.random() * 100) + 'px');
+  butterfly.style.setProperty('--end-x', (Math.random() * 200 - 100) + 'px');
+  butterfly.style.setProperty('--end-y', (-250 - Math.random() * 150) + 'px');
+  butterfly.style.setProperty('--r1', (Math.random() * 20 - 10) + 'deg');
+  butterfly.style.setProperty('--r2', (Math.random() * 25 - 15) + 'deg');
+  butterfly.style.setProperty('--r3', (Math.random() * 30 - 10) + 'deg');
+  butterfly.style.animationDelay = (Math.random() * 0.5) + 's';
+  container.appendChild(butterfly);
+  setTimeout(() => butterfly.remove(), 4500);
+ }
 }
 function showSparkle() {
-  sparkle.innerHTML = '';
-  const count = 20; // more visible sparkles
-  for (let i = 0; i < count; i++) {
-    const el = document.createElement('div');
-    el.className = 'particle';
-    el.style.left = (10 + Math.random() * 80) + '%';
-    el.style.top = (-20 - Math.random() * 20) + 'px'; // start above page
-    el.style.animationDelay = (Math.random() * 1.2) + 's';
-    el.style.width = (5 + Math.random() * 8) + 'px';
-    el.style.height = el.style.width;
-    sparkle.appendChild(el);
-    setTimeout(() => { el.remove(); }, 4200);
-  }
+ sparkle.innerHTML = '';
+ const count = 20; // more visible sparkles
+ for (let i = 0; i < count; i++) {
+  const el = document.createElement('div');
+  el.className = 'particle';
+  el.style.left = (10 + Math.random() * 80) + '%';
+  el.style.top = (-20 - Math.random() * 20) + 'px'; // start above page
+  el.style.animationDelay = (Math.random() * 1.2) + 's';
+  el.style.width = (5 + Math.random() * 8) + 'px';
+  el.style.height = el.style.width;
+  sparkle.appendChild(el);
+  setTimeout(() => { el.remove(); }, 4200);
+ }
 }
 
 const flipSound = new Audio('page-flip-47177.mp3');
 function playFlipSound() {
-  flipSound.currentTime = 0;
-  flipSound.play();
+ flipSound.currentTime = 0;
+ flipSound.play();
 }
 
 function animateFlip(){
-  playFlipSound();
-  book.style.transition = 'transform 0.6s ease';
-  book.style.transform = 'rotateY(-10deg)';
-  setTimeout(()=>{ book.style.transform='rotateY(0deg)'; },300);
-  showSparkle();
-  showButterfly();
+ playFlipSound();
+ book.style.transition = 'transform 0.6s ease';
+ book.style.transform = 'rotateY(-10deg)';
+ setTimeout(()=>{ book.style.transform='rotateY(0deg)'; },300);
+ showSparkle();
+ showButterfly();
 }
 
 function render(){
-  pageWrap.innerHTML = '';
-  const current = pages[index];
-  const pageNode = document.createElement('section');
-  pageNode.className = 'page';
-  
-  if(current.mainTitle){
-    pageNode.classList.add('cover');
-    pageNode.innerHTML = `
-      <div class="main-title">${escapeHtml(current.mainTitle)}</div>
-      ${current.personImg ? `<div class="person-img"><img src="${current.personImg}" alt="Person"></div>` : ''}
-      <div class="subtitle">${escapeHtml(current.subtitle)}</div>
-      <div class="note">${escapeHtml(current.message)}</div>`;
-  } else {
-    pageNode.innerHTML = `<div class="note">${escapeHtml(current.message)}</div>`;
+ pageWrap.innerHTML = '';
+ const current = pages[index];
+ const pageNode = document.createElement('section');
+ pageNode.className = 'page';
+ 
+ if(current.mainTitle){
+  // Cover Page Rendering
+  pageNode.classList.add('cover');
+  pageNode.innerHTML = `
+   <div class="main-title">${escapeHtml(current.mainTitle)}</div>
+   ${current.personImg ? `<div class="person-img"><img src="${current.personImg}" alt="Person"></div>` : ''}
+   <div class="subtitle">${escapeHtml(current.subtitle)}</div>
+   <div class="note">${escapeHtml(current.message)}</div>`;
+ } else {
+  // Regular Page Rendering
+  let mediaHtml = '';
+  // Add optional media overlay
+  if (current.mediaUrl) {
+   mediaHtml = `<div class="page-media"><img src="${current.mediaUrl}" alt="Decorative media"></div>`;
   }
 
-  pageWrap.appendChild(pageNode);
-  setTimeout(()=>{ pageNode.classList.add('visible'); }, 100);
+  pageNode.innerHTML = `
+   ${mediaHtml}
+   <div class="note">${escapeHtml(current.message)}</div>
+  `;
+ }
+
+ pageWrap.appendChild(pageNode);
+ setTimeout(()=>{ pageNode.classList.add('visible'); }, 100);
 }
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'||e.key==='PageDown'){ if(index<pages.length-1){ index++; animateFlip(); render(); } }
-  if(e.key==='ArrowLeft'||e.key==='PageUp'){ if(index>0){ index--; animateFlip(); render(); } }
+ if(e.key==='ArrowRight'||e.key==='PageDown'){ if(index<pages.length-1){ index++; animateFlip(); render(); } }
+ if(e.key==='ArrowLeft'||e.key==='PageUp'){ if(index>0){ index--; animateFlip(); render(); } }
 });
 
 let touchStartX=0;
 document.addEventListener('touchstart',e=>{ touchStartX=e.touches[0].clientX; },{passive:true});
 document.addEventListener('touchend',e=>{
-  const dx=e.changedTouches[0].clientX-touchStartX;
-  if(Math.abs(dx)>40){ 
-    if(dx<0 && index<pages.length-1){ index++; animateFlip(); render(); }
-    else if(dx>0 && index>0){ index--; animateFlip(); render(); }
-  }
+ const dx=e.changedTouches[0].clientX-touchStartX;
+ if(Math.abs(dx)>40){ 
+  if(dx<0 && index<pages.length-1){ index++; animateFlip(); render(); }
+  else if(dx>0 && index>0){ index--; animateFlip(); render(); }
+ }
 });
 
 render();
