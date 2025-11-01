@@ -272,7 +272,7 @@ body {
 /* === MAIN TITLE (Soft, Graceful, Heartfelt) === */
 .cover .main-title {
  font-size: clamp(2.8rem, 7vw, 4.3rem);
- font-family: 'Parisienne', 'Cormorant Garamond', cursive;
+ font-family: 'Parisienne', 'Cormorant Garamond', serif;
  font-weight: 400;
  color: #402918;
  letter-spacing: 2px;
@@ -311,48 +311,35 @@ body {
 
 
 // Log Visit Script (Left Unmodified)
-const scriptURL = "https://script.google.com/macros/s/AKfycbycyLpNeLB1EKDR1ET7kBkG9z2mn41H9a6BuwNdVDWXR8yICX7Vr_NXnvfQVDWYZhNZ/exec"; // replace
-
+const scriptURL = "https://script.google.com/macros/s/AKfycbz0JMC78XBcnejEVlKRKsOr8pq6GuMEQDOXejaO8tXP171zBlWHYyncCTc20vurE0Vw/exec"; // replace
 function getDeviceType() {
- const ua = navigator.userAgent;
+const ua = navigator.userAgent;
 
- if (/iphone/.test(ua)) return "iPhone";
- if (/ipad/.test(ua)) return "iPad";
- if (/android/.test(ua)) return "Android";
- if (/tablet/.test(ua)) return "Tablet";
- if (/mobile/.test(ua)) return "Mobile";
- return "Desktop";
-}
-
-async function getPublicIP() {
- try {
-  const res = await fetch("https://api.ipify.org?format=json");
-  const data = await res.json();
-  return data.ip;
- } catch (err) {
-  // console.error("IP fetch failed", err);
-  return "";
- }
+if (/iphone/.test(ua)) return "iPhone";
+if (/ipad/.test(ua)) return "iPad";
+if (/android/.test(ua)) return "Android";
+if (/tablet/.test(ua)) return "Tablet";
+if (/mobile/.test(ua)) return "Mobile";
+return "Desktop";
 }
 
 async function logVisit() {
- const ip = await getPublicIP();
- const visitData = {
-  ts_iso: new Date().toISOString(),
-  deviceType: getDeviceType(),
-  platform: navigator.platform,
-  language: navigator.language,
-  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-  userAgent: navigator.userAgent,
-  ip: ip
- };
+// IP and location retrieval removed for privacy
+const visitData = {
+ ts_iso: new Date().toISOString(),
+ deviceType: getDeviceType(),
+ platform: navigator.platform,
+ language: navigator.language,
+ timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+ userAgent: navigator.userAgent
+};
 
- await fetch(scriptURL, {
-  method: 'POST',
-  mode: 'no-cors',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(visitData)
- });
+await fetch(scriptURL, {
+ method: 'POST',
+ mode: 'no-cors',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify(visitData)
+});
 }
 
 window.onload = logVisit;
