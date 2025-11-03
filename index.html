@@ -7,290 +7,446 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
 @font-face {
-   font-family: 'Halimun';
- src: url('halimun-font/Halimun-W7jn.ttf') format('truetype');
+font-family: 'Halimun';
+src: url('halimun-font/Halimun-W7jn.ttf') format('truetype');
 }
 
 @font-face {
- font-family: 'PerfectoCalligraphy';
- src: url('perfecto-calligraphy-personal-use/PerfectoCalligraphy.ttf') format('truetype');
+font-family: 'PerfectoCalligraphy';
+src: url('perfecto-calligraphy-personal-use/PerfectoCalligraphy.ttf') format('truetype');
 }
 
 :root {
- --page-width: min(760px, 95vw);
- --page-height: calc(var(--page-width) * 0.75);
- --shadow: rgba(0,0,0,0.36);
+--page-width: min(760px, 95vw);
+/* Adjusted --page-height for better aspect ratio, slightly taller to accommodate text */
+--page-height: calc(var(--page-width) * 0.9); 
+--shadow: rgba(0,0,0,0.36);
+/* Vintage Colors - Added for consistency with previous solution */
+--color-text-dark: #3b2414;
+--color-text-light: #402918;
+--color-bg-light: #fdf6ed;
+--color-bg-dark: #d2b48c;
+--color-accent: #b89f7f;
+}
+
+html, body {
+height: 100%; /* Ensure html and body take full height */
+margin: 0;
+padding: 0;
 }
 
 body {
- margin: 0;
- padding: 0;
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: flex-start;
- min-height: 100vh;
- background: linear-gradient(180deg, #fdf6ed 0%, #d2b48c 85%);
- font-family: 'IM Fell English', serif;
- overflow-x: hidden;
+display: flex;
+flex-direction: column;
+align-items: center;
+/* CHANGED: Justify content to center to vertically align the book */
+justify-content: center; 
+/* min-height: 100vh; removed, now using height: 100% from html,body */
+background: linear-gradient(180deg, #fdf6ed 0%, #d2b48c 85%);
+font-family: 'IM Fell English', serif;
+overflow-x: hidden;
+/* Added overflow-y: auto to allow scrolling if content overflows in complex layouts */
+overflow-y: auto;
 }
 
 .scene {
- width: var(--page-width);
- height: var(--page-height);
- perspective: 1500px;
- position: relative;
+width: var(--page-width);
+height: var(--page-height); /* Directly use the calculated page height */
+perspective: 1500px;
+position: relative;
+/* REMOVED: Fixed margins, justify-content: center on body will handle spacing */
+/* margin-top: 20px; */
+/* margin-bottom: 20px; */
+flex-shrink: 0; /* Prevent scene from shrinking on smaller screens */
+box-sizing: content-box; /* Ensures padding/border doesn't mess with width/height */
 }
 
 .book {
- width: 100%;
- height: 100%;
- position: relative;
- transform-style: preserve-3d;
+width: 100%;
+height: 100%; /* Book takes full height of its scene container */
+position: relative;
+transform-style: preserve-3d;
 }
 
 .page-wrap {
- position: absolute;
- inset: 0;
- display: flex;
- justify-content: center;
+position: absolute;
+inset: 0;
+display: flex;
+justify-content: center;
+/* Ensure page-wrap also takes full height */
+width: 100%;
+height: 100%;
 }
 
 .page {
- width: 100%;
- height: 100%;
- padding: 28px 24px;
- border-radius: 16px;
- box-shadow: 0 28px 60px var(--shadow), 0 8px 18px rgba(0,0,0,0.18),
-       inset 0 2px 0 rgba(255,255,255,0.08),
-       inset 0 0 0 1px rgba(58,43,31,0.12);
- display: flex;
- flex-direction: column;
- justify-content: center;
- align-items: center;
- text-align: center;
- /* Existing background image setup */
- background: url('image.png') no-repeat center/cover;
- background-color: #f3e6cd;
- background-blend-mode: multiply;
- transition: transform 1s cubic-bezier(.2,.8,.12,1);
- opacity: 0;
- position: relative; /* Needed for absolute positioning of media */
+width: 100%;
+height: 100%; /* Page takes full height of its page-wrap container */
+padding: 28px 24px;
+box-sizing: border-box; /* Ensures padding is included in the width/height */
+border-radius: 16px;
+box-shadow: 0 28px 60px var(--shadow), 0 8px 18px rgba(0,0,0,0.18),
+ inset 0 2px 0 rgba(255,255,255,0.08),
+ inset 0 0 0 1px rgba(58,43,31,0.12);
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+/* Existing background image setup */
+/* NOTE: This background will be overridden by .page-media if present */
+background: url('image.png') no-repeat center/cover;
+background-color: #f3e6cd;
+background-blend-mode: multiply;
+transition: transform 1s cubic-bezier(.2,.8,.12,1);
+opacity: 0;
+position: relative; /* Needed for absolute positioning of media */
+overflow: hidden; /* Important for full background images */
 }
 
 .page.visible {
- opacity: 1;
- transition: opacity 0.8s ease;
+opacity: 1;
+transition: opacity 0.8s ease;
 }
 
 /* New: Media Overlay Styles */
 .page-media {
- position: absolute;
- inset: 0;
- z-index: 5; /* Below text content but above background */
- overflow: hidden;
- opacity: 0.175; /* Increased opacity for better visibility */
- display: flex;
- align-items: center;
- justify-content: center;
+position: absolute;
+inset: 0;
+z-index: 1; /* Below text content, above regular page background */
+overflow: hidden;
+opacity: 0.175; /* Increased opacity for better visibility */
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
 .page-media img {
- width: 100%;
- height: 100%;
- object-fit: cover; /* CHANGED: Now the image/GIF will cover the entire area */
- /* Removed the filter for full color and clearer visibility */
-}
-@media (max-width: 640px) {
- :root {
-  --page-width: 95vw;
-  --page-height: calc(95vw * 1.6); /* Adjusted ratio from 1.85 to 1.6 or similar */
- }
- .mobile-note { display: block; text-align: center; width: 90vw; }
+width: 100%;
+height: 100%;
+object-fit: cover; /* Default cover behavior */
+/* Removed the filter for full color and clearer visibility */
 }
 
 /* Cover Page */
 .cover {
- background: url('cover.jpg') no-repeat center/cover;
- background-size: cover;
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: center;
- text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
- color: #3a2b1f;
- padding: 40px 20px;
+background: url('cover.jpg') no-repeat center/cover;
+background-size: cover;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+color: #3a2b1f;
+padding: 40px 20px;
 }
 
 .cover .main-title {
- font-size: clamp(2.5rem, 7vw, 4rem);
- font-family: 'IM Fell English', serif;
- text-transform: uppercase;
- letter-spacing: 4px;
- font-weight: 600;
- margin-bottom: 25px;
+font-size: clamp(2.5rem, 7vw, 4rem);
+font-family: 'IM Fell English', serif;
+text-transform: uppercase;
+letter-spacing: 4px;
+font-weight: 600;
+margin-bottom: 25px;
 }
 
 .cover .person-img {
- width: 150px;
- height: 150px;
- border-radius: 50%;
- overflow: hidden;
- border: 4px solid #3a2b1f;
- margin-bottom: 20px;
- box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+width: 150px;
+height: 150px;
+border-radius: 50%;
+overflow: hidden;
+border: 4px solid #3a2b1f;
+margin-bottom: 20px;
+box-shadow: 0 4px 14px rgba(0,0,0,0.25);
 }
 
 .cover .person-img img {
- width: 100%;
- height: 100%;
- object-fit: cover;
+width: 100%;
+height: 100%;
+object-fit: cover;
 }
 
 .cover .subtitle {
- font-size: clamp(1.25rem, 5.5vw, 2rem);
- margin-top: 10px;
- font-style: italic;
+font-size: clamp(1.25rem, 5.5vw, 2rem);
+margin-top: 10px;
+font-style: italic;
 }
 
 .page .note, .cover .note {
- font-size: clamp(1rem, 4vw, 1.5rem);
- line-height: 1.8;
- max-width: 82%;
- text-align: center;
- margin-top: 25px;
- font-family: 'IM Fell English', serif;
- letter-spacing: 0.3px;
- z-index: 10; /* Ensure text is above the media overlay */
- position: relative; /* Bring text to the front */
+font-size: clamp(1rem, 4vw, 1.5rem);
+line-height: 1.8;
+max-width: 82%;
+text-align: center;
+margin-top: 25px;
+font-family: 'IM Fell English', serif;
+letter-spacing: 0.3px;
+z-index: 10; /* Ensure text is above the media overlay */
+position: relative; /* Bring text to the front */
+color: #3b2414; /* Added for consistency */
+text-shadow: 0 1px 1px rgba(255,255,255,0.3); /* Added for consistency */
 }
 
 /* === SPARKLE ANIMATION (soft fall effect) === */
 .sparkle {
- pointer-events: none;
- position: absolute;
- inset: 0;
- z-index: 10;
- overflow: hidden;
+pointer-events: none;
+position: absolute;
+inset: 0;
+z-index: 10;
+overflow: hidden;
 }
 
 .particle {
- position: absolute;
- width: 10px;
- height: 10px;
- border-radius: 50%;
- background: radial-gradient(circle at center, #fffbe0 10%, #f6d98a 60%, #d4a64f 90%);
- box-shadow: 0 2px 8px rgba(0,0,0,0.2);
- opacity: 0;
- animation: sparkleFall 3.8s ease-in forwards;
+position: absolute;
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: radial-gradient(circle at center, #fffbe0 10%, #f6d98a 60%, #d4a64f 90%);
+box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+opacity: 0;
+animation: sparkleFall 3.8s ease-in forwards;
 }
 
 @keyframes sparkleFall {
- 0% {
-  opacity: 0;
-  transform: translateY(-40px) scale(0.5) rotate(0deg);
- }
- 10% {
-  opacity: 1;
-  transform: translateY(0px) scale(0.9) rotate(10deg);
- }
- 50% {
-  opacity: 1;
-  transform: translateY(120px) rotate(30deg);
- }
- 100% {
-  opacity: 0;
-  transform: translateY(220px) scale(1) rotate(50deg);
- }
+0% {
+opacity: 0;
+transform: translateY(-40px) scale(0.5) rotate(0deg);
+}
+10% {
+opacity: 1;
+transform: translateY(0px) scale(0.9) rotate(10deg);
+}
+50% {
+opacity: 1;
+transform: translateY(120px) rotate(30deg);
+}
+100% {
+opacity: 0;
+transform: translateY(220px) scale(1) rotate(50deg);
+}
 }
 
 /* Butterfly Animation */
 .butterfly {
- position: absolute;
- width: 55px;
- height: 55px;
- opacity: 0;
- background: url('ddapzle-c7909979-452f-44b2-a03e-d206fcf49d3b.gif') no-repeat center/contain;
- pointer-events: none;
- filter: drop-shadow(0 3px 5px rgba(0,0,0,0.25));
- animation: vintageButterflyFly var(--duration) ease-in-out forwards;
- transform-origin: center;
- z-index: 15;
+position: absolute;
+width: 55px;
+height: 55px;
+opacity: 0;
+background: url('ddapzle-c7909979-452f-44b2-a03e-d206fcf49d3b.gif') no-repeat center/contain; /* Ensure this GIF path is correct */
+pointer-events: none;
+filter: drop-shadow(0 3px 5px rgba(0,0,0,0.25));
+animation: vintageButterflyFly var(--duration) ease-in-out forwards;
+transform-origin: center;
+z-index: 15;
 }
 
 @keyframes vintageButterflyFly {
- 0% { opacity: 0; transform: translate(var(--start-x), var(--start-y)) scale(0.85) rotate(0deg); }
- 10% { opacity: 0.8; }
- 40% { transform: translate(var(--mid-x), var(--mid-y)) scale(1) rotate(var(--r1)); opacity: 1; }
- 70% { transform: translate(var(--end-x), var(--end-y)) scale(1) rotate(var(--r2)); opacity: 0.9; }
- 100% { opacity: 0; transform: translate(calc(var(--end-x) * 1.2), calc(var(--end-y) * 1.1)) scale(0.9) rotate(var(--r3)); }
+0% { opacity: 0; transform: translate(var(--start-x), var(--start-y)) scale(0.85) rotate(0deg); }
+10% { opacity: 0.8; }
+40% { transform: translate(var(--mid-x), var(--mid-y)) scale(1) rotate(var(--r1)); opacity: 1; }
+70% { transform: translate(var(--end-x), var(--end-y)) scale(1) rotate(var(--r2)); opacity: 0.9; }
+100% { opacity: 0; transform: translate(calc(var(--end-x) * 1.2), calc(var(--end-y) * 1.1)) scale(0.9) rotate(var(--r3)); }
 }
 
 /* Mobile Swipe Note */
 .mobile-note {
- position: fixed;
- bottom: 18px;
- left: 50%;
- transform: translateX(-50%);
- background: transparent;
- padding: 8px 12px;
- border-radius: 10px;
- font-size: 1rem;
- font-family: 'IM Fell English', serif;
- color: #2e2218;
- text-shadow: 0 1px 2px rgba(255,255,255,0.6);
- z-index: 50;
- display: none;
-}
-
-@media (max-width: 640px) {
- :root {
-  --page-width: 95vw;
-  --page-height: calc(95vw * 1.85);
- }
- .mobile-note { display: block; text-align: center; width: 90vw; }
+position: fixed;
+bottom: 18px;
+left: 50%;
+transform: translateX(-50%);
+background: transparent;
+padding: 8px 12px;
+border-radius: 10px;
+font-size: 1rem;
+font-family: 'IM Fell English', serif;
+color: #2e2218;
+text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+z-index: 50;
+display: none;
 }
 
 /* === WARM EMOTIONAL VINTAGE FONT SETUP === */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Parisienne&display=swap');
 
-/* === PAGE TEXT STYLE === */
+/* These styles were already in your previous requests, ensuring they are present */
 .page .note, .cover .note {
- font-size: clamp(1rem, 4vw, 1.5rem);
- line-height: 1.9;
- max-width: 82%;
- text-align: center;
- margin-top: 25px;
- font-family: 'Cormorant Garamond', serif;
- font-style: italic;
- font-weight: 500;
- letter-spacing: 0.3px;
- color: #3b2414;
- text-shadow: 0 1px 1px rgba(255,255,255,0.3);
+font-family: 'Cormorant Garamond', serif;
+font-style: italic;
+font-weight: 500;
+color: #3b2414;
 }
-
-/* === MAIN TITLE (Soft, Graceful, Heartfelt) === */
 .cover .main-title {
- font-size: clamp(2.8rem, 7vw, 4.3rem);
- font-family: 'Parisienne', 'Cormorant Garamond', serif;
- font-weight: 400;
- color: #402918;
- letter-spacing: 2px;
- text-shadow: 1px 1px 4px rgba(255,255,255,0.5);
- margin-bottom: 25px;
- font-style: normal;
+font-family: 'Parisienne', 'Cormorant Garamond', serif;
+color: #402918;
+}
+.cover .subtitle {
+font-family: 'Cormorant Garamond', serif;
+color: #4c3120;
 }
 
-/* === SUBTITLE (Elegant and Emotional Accent) === */
-.cover .subtitle {
- font-size: clamp(1.4rem, 5vw, 2.1rem);
- font-family: 'Cormorant Garamond', serif;
- font-style: italic;
- color: #4c3120;
- letter-spacing: 0.5px;
- text-shadow: 0 1px 2px rgba(255,255,255,0.5);
- margin-top: 8px;
+
+
+/* === STARRY NIGHT INTERACTIVE STYLES FIXES === */
+.page-media.starry-night-bg {
+opacity: 1.0;
+z-index: 1;
+/* FIX: Adds a background color to the container to fill the height gaps (letterboxing). */
+background-color: #111830; 
 }
+.page-media.starry-night-bg img {
+/* FIX: Ensures the entire image is visible (zoom-out effect) */
+object-fit: contain; 
+object-position: center; 
+}
+
+/* NEW: Style for the "Click on star" message */
+.star-prompt {
+position: absolute;
+top: 5%; 
+left: 50%;
+transform: translateX(-50%);
+z-index: 15; /* Above stars and background */
+font-family: 'Cormorant Garamond', serif;
+font-size: clamp(1.1rem, 4vw, 1.5rem);
+color: #ffffff; /* White text for visibility on dark background */
+padding: 5px 15px;
+border-radius: 8px;
+white-space: nowrap; /* Keep the message on one line */
+
+}
+
+
+.star-container {
+position: absolute;
+inset: 0;
+z-index: 10; /* Above the background image */
+pointer-events: none; /* Allow clicks on children, not container */
+}
+
+.star {
+position: absolute;
+width: 40px; 
+height: 40px;
+/* --- MODIFIED STAR SHAPE (White Diamond) --- */
+background: radial-gradient(ellipse at center, #ffffff 20%, #e0e0e0 40%, rgba(255,255,255,0) 70%);
+clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); /* Diamond star shape */
+border-radius: 0; /* Remove border-radius for diamond shape */
+cursor: pointer;
+pointer-events: auto; /* Make the star clickable */
+filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 5px #e0e0e0);
+animation: pulseStar 1.5s infinite alternate;
+transition: transform 0.2s ease-out;
+z-index: 12; /* Above other elements on the page */
+}
+
+.star:hover {
+transform: scale(1.2);
+filter: drop-shadow(0 0 15px #ffffff) drop-shadow(0 0 8px #e0e0e0);
+}
+
+@keyframes pulseStar {
+from { transform: scale(1); opacity: 0.9; }
+to { transform: scale(1.05); opacity: 1; }
+}
+
+/* --- Message Popup --- */
+.message-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.7);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 1000; /* Highest z-index to overlay everything */
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease;
+backdrop-filter: blur(5px);
+}
+
+.message-overlay.visible {
+opacity: 1;
+pointer-events: auto;
+}
+
+.message-box {
+background: #fdf6ed; /* Using var(--color-bg-light) directly */
+border: 2px solid #d2b48c; /* Using var(--color-bg-dark) directly */
+padding: 30px 40px;
+border-radius: 15px;
+box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+max-width: min(500px, 85vw);
+max-height: 80vh;
+overflow-y: auto;
+text-align: center;
+font-family: 'Cormorant Garamond', serif;
+color: #3b2414; /* Using var(--color-text-dark) directly */
+font-size: clamp(1rem, 4vw, 1.3rem);
+line-height: 1.6;
+position: relative;
+transform: scale(0.9);
+opacity: 0;
+transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.message-overlay.visible .message-box {
+transform: scale(1);
+opacity: 1;
+}
+
+.message-box h3 {
+font-family: 'Parisienne', serif;
+font-size: clamp(1.8rem, 6vw, 2.5rem);
+color: #402918; /* Using var(--color-text-light) directly */
+margin-top: 0;
+margin-bottom: 15px;
+text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.close-button {
+position: absolute;
+top: 15px;
+right: 15px;
+background: #b89f7f; /* Using var(--color-accent) directly */
+color: #3b2414; /* Using var(--color-text-dark) directly */
+border: none;
+border-radius: 50%;
+width: 30px;
+height: 30px;
+font-size: 1.2rem;
+font-weight: bold;
+cursor: pointer;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.close-button:hover {
+background: #b89f7f; /* Kept original hover color */
+transform: scale(1.1);
+}
+
+/* Media Query for mobile - must be at the end of @media blocks */
+@media (max-width: 640px) {
+.mobile-note { display: block; text-align: center; width: 90vw; }
+/* Adjusted page height for mobile to a 4:3 aspect ratio relative to width */
+:root {
+--page-height: calc(95vw * 1.33); 
+}
+.scene {
+/* Ensure the scene has proper spacing around it on mobile */
+margin-top: 2vh; /* Small margin from top */
+margin-bottom: 2vh; /* Small margin from bottom */
+height: 928px;
+}
+}
+@media (max-height: 700px) and (max-width: 640px) {
+/* Further adjust for shorter mobile screens */
+:root {
+--page-height: calc(95vw * 1.2); /* Make it a bit shorter if screen is also short */
+}
+
+}
+
 
 </style>
 </head>
@@ -298,18 +454,24 @@ body {
 <body>
 
 <div class="scene">
- <div class="book" id="book">
-  <div class="page-wrap" id="pageWrap"></div>
-  <div class="sparkle" id="sparkle"></div>
- </div>
- <div class="butterfly-container" id="butterflyContainer"></div>
+<div class="book" id="book">
+<div class="page-wrap" id="pageWrap"></div>
+<div class="sparkle" id="sparkle"></div>
+</div>
+<div class="butterfly-container" id="butterflyContainer"></div>
 </div>
 
 <div class="mobile-note">Swipe left or right to turn pages</div>
 
+<div class="message-overlay" id="messageOverlay">
+<div class="message-box">
+<button class="close-button" id="closeMessage">&times;</button>
+<h3 id="messageTitle"></h3>
+<p id="messageContent"></p>
+</div>
+</div>
+
 <script>
-
-
 // Log Visit Script (Left Unmodified)
 const scriptURL = "https://script.google.com/macros/s/AKfycbwEvkkWCAGINBdBHW4iOWrFF2At0YgclqJay-NybxgErj-OsH81YNTgt9Tu2nObimPu/exec"; // replace
 function getDeviceType() {
@@ -326,35 +488,36 @@ return "Desktop";
 async function logVisit() {
 // IP and location retrieval removed for privacy
 const visitData = {
- ts_iso: new Date().toISOString(),
- deviceType: getDeviceType(),
- platform: navigator.platform,
- language: navigator.language,
- timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
- userAgent: navigator.userAgent
+ts_iso: new Date().toISOString(),
+deviceType: getDeviceType(),
+platform: navigator.platform,
+language: navigator.language,
+timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+userAgent: navigator.userAgent
 };
 
 await fetch(scriptURL, {
- method: 'POST',
- mode: 'no-cors',
- headers: { 'Content-Type': 'application/json' },
- body: JSON.stringify(visitData)
-});
+method: 'POST',
+mode: 'no-cors',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(visitData)
+}).catch(e => console.log("Visit logging failed:", e)); // Added catch for logging
 }
 
 window.onload = logVisit;
 
 
-// Pages Array with new 'mediaUrl' property
+// Pages Array with new 'mediaUrl' property and the new interactive page
 const pages = [
- { 
-  mainTitle: "HAPPY BIRTHDAY", 
-  subtitle: "Anjali Chandwani", 
-  message: "Wishing you a day filled with joy, laughter, and unforgettable memories. You deserve all the happiness in the world today and always.",
-  personImg: "front_photo.png" 
- },
+{ 
+mainTitle: "HAPPY BIRTHDAY", 
+subtitle: "Anjali Chandwani", 
+message: "Wishing you a day filled with joy, laughter, and unforgettable memories. You deserve all the happiness in the world today and always.",
+personImg: "front_photo.png" 
+},
 
- {
+
+{
   "message": "For the Sweet & Wonderful Person\n----------------\n\nThis is about a sweet and wonderful girl — someone truly special, even if she doesn’t always realize just how rare and amazing she really is.",
  
  },
@@ -366,16 +529,17 @@ const pages = [
   "message": "amazing company anyone could ask for, and I genuinely enjoy talking to you more than anyone else (I don’t even know why — I just do).You’re the most genuine and real person I’ve ever met — no show-off & all — just this soft, innocent charm, like a little cute child whose smile lifts the weight off everything around and whose presence brings a quiet, comforting peace. I really wish I could talk to you more. There’s something wonderfully different about your energy — warm, genuine, and so easy to trust; I can’t quite explain it, but it just feels different."
  },
  {
-  "message": "That energy is rare, Anjali. Whenever we talk, my day always gets better—maybe you’re a little lucky for me. Thank you for always suggesting such good movies and series—you seriously have great taste! You’re also a really interesting person with so many skills. You’re artistic, love doing arts and crafts, can play a bit of piano and the mouth organ, are skilled in gardening, great at games (like Chess — I’ve learned from you, but obviously, I’m not as good as you.), and love reading.",
+  "message": "That energy is rare, Anjali. Whenever we talk, my day always gets better—maybe you’re a little lucky for me. Thank you for always suggesting such good movies and series—you seriously have great taste! You’re also a really interesting person with so many skills. You’re artistic, love doing arts and crafts, can play a bit of piano and the mouth organ, are skilled in gardening, great at games (like Chess — I’ve learned from you, but obviously, I’m not as good as you.), and love reading.You take such lovely photos — especially of the moon and that one of Saturn! I’m sure there are so many talents you have that I haven’t even discovered yet.",
+  "mediaUrl": "moon_an.png"  
  
  },
  {
-    "message": "You take such lovely photos — especially of the moon and that one of Saturn! I’m sure there are so many talents you have that I haven’t even discovered yet.I’m really curious to know more about you — I don’t know if I’ll ever get the chance, but honestly, I’d like to. You truly deserve lots of appreciation — not just for your skills, but for the person you are. I’m sure everyone admires you even more than I can imagine. Honestly, you’re such an amazing person — so innocent… well, maybe not entirely innocent, but with those little black innocent eyes, anyone would believe it. Just kidding — but honestly, they really do!"
-    ,"mediaUrl": "moon_an.png"  
+    "message": "You know, maybe you won’t believe it, but people say that a butterfly doesn’t know how beautiful it is — and I think that’s kind of like you. You have this quiet charm, and so many qualities that you probably don’t even realize.I’m really curious to know more about you — I don’t know if I’ll ever get the chance, but honestly, I’d like to. You truly deserve lots of appreciation — not just for your skills, but for the person you are. I’m sure everyone admires you even more than I can imagine. Honestly, you’re such an amazing person — so innocent… well, maybe not entirely innocent, but with those little black innocent eyes, anyone would believe it. Just kidding — but honestly, they really do!"
+  
   },
 
 
-  {"message":"Sometimes, I catch that quiet sadness behind your smile, even when you’re trying to look okay. I don’t know why others don’t see it, but somehow, I do. There are moments I want to ask if you’re alright, but the words don’t come out — and when I finally do, you say you’re fine, even though I can feel you’re not. Maybe you think I wouldn’t understand… maybe you’re right, or maybe not. But still, if you ever feel like talking — about anything at all — I’m here. Trust me, I’m a good listener, and I always will be."},
+  {"message":"Sometimes, I catch that quiet sadness behind your smile, even when you’re trying to look okay. I’m not sure why others don’t notice it — maybe they do, maybe they don’t, but I do. I always do. There are moments I want to ask if you’re alright, but the words don’t come out — and when I finally do, you say you’re fine, even though I can feel you’re not. Maybe you think I wouldn’t understand… maybe you’re right, or maybe not. But still, if you ever feel like talking — about anything at all — I’m here. Trust me, I’m a good listener, and I always will be."},
   {
     "message": "I thought this quote suits you perfectly —\n“She carries a quiet kind of magic — the kind that doesn’t seek attention, but leaves everything she touches a little more beautiful, a little more alive.”\n- Butterflies Rising"
   },
@@ -399,11 +563,34 @@ const pages = [
   {
   "message": "I just wanna say one last thing from my side, and please remember this always — I know I can’t solve everything or make every problem disappear; no one really can — some battles you’re meant to face on your own. But I’ll always try to be there — to listen, to talk, and to make sure you never feel alone. You can share anything with me, trust me, anything — whether it’s something random or something that truly matters. And if you don’t like my company, that’s absolutely fine — just be with whoever’s company you enjoy, because all I really want is to see you happy, with lots of smiles. Never feel like you don’t have anyone by your side — you’re never truly alone. I just wanna be someone you can rely on — not perfect, but always real."
 },
+/* --- NEW INTERACTIVE STARRY NIGHT PAGE --- */
 {
-  "message": "Many, many happiest birthdays again! ✨ \nAlways keep that cute smile just like you always do, and stay happy — that’s the only thing that truly matters.\nI wish that every single day brings you countless reasons to smile — moments filled with peace, warmth, and gentle joy. May life continue to gift you endless happiness, and enough strength to face whatever comes your way. Take care of yourself always, and never stop being the beautiful soul that you are. \n----------------------------- END -----------------------------"
+"message": "Click on stars to read messages", // This text is now handled by the .star-prompt CSS and HTML element
+"mediaUrl": "girls.png", // Use your specific image for the background
+"pageType": "starryNight", 
+"stars": [
+{
+ "id": "star1",
+ // Adjusted positions slightly to better fit the 'sky' area of girls.jpg
+ "position": "top: 18%; left: 25%;", 
+ "message": "Funny<br>Sometimes you say things that are so silly yet somehow make perfect sense — unintentionally hilarious!<br><br>Honestly, I always thought you’d be even funnier after a drink… that’s just my theory though 😄"
+},
+{
+ "id": "star2",
+ "position": "top: 10%; right: 20%;",
+ "message": "Mysterious<br>Understanding you is honestly so difficult — but maybe that’s just because you’re a girl.<br><br>Some mysteries aren’t meant to be solved anyway 😉"
+},
+{
+ "id": "star3",
+ "position": "top: 32%; left: 67%; transform: translateX(-50%);", // Centered star
+ "message": "Downside<br>If I had to pick one downside, maybe it’s that you’re a little too busy — or maybe you just like keeping people guessing"
 }
+]
+},
 
-
+{
+  "message": "Many, many happiest birthdays again! ✨ \nAlways keep that cute smile just like you always do, and stay happy — that’s the only thing that truly matters.\nI wish that every single day brings you countless reasons to smile — moments filled with peace, warmth, and gentle joy. May life continue to gift you endless happiness, and enough strength to face whatever comes your way. Take care of yourself always, and never stop being the beautiful soul that you are. \n---- END ----"
+}
 
 ];
 
@@ -412,109 +599,174 @@ const book = document.getElementById('book');
 const pageWrap = document.getElementById('pageWrap');
 const sparkle = document.getElementById('sparkle');
 
-function escapeHtml(str){ if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\r?\n/g,'<br/>'); }
+// Message Box elements
+const messageOverlay = document.getElementById('messageOverlay');
+const messageTitle = document.getElementById('messageTitle');
+const messageContent = document.getElementById('messageContent');
+const closeMessage = document.getElementById('closeMessage');
+
+// Event listener for the global close button
+closeMessage.addEventListener('click', () => {
+messageOverlay.classList.remove('visible');
+});
+
+function escapeHtml(str){ 
+if(!str) return ''; 
+return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\r?\n/g,'<br/>'); 
+}
 
 // Animation functions (left unmodified)
 function showButterfly() {
- const container = document.getElementById('butterflyContainer');
- const count = Math.floor(Math.random() * 2) + 2; // 2–3 butterflies
- for (let i = 0; i < count; i++) {
-  const butterfly = document.createElement('div');
-  butterfly.className = 'butterfly';
-  const duration = (3.2 + Math.random() * 1.0) + 's';
-  butterfly.style.setProperty('--duration', duration);
-  butterfly.style.left = (10 + Math.random() * 80) + '%';
-  butterfly.style.bottom = '-60px';
-  butterfly.style.setProperty('--start-x', (Math.random() * 200 - 100) + 'px');
-  butterfly.style.setProperty('--start-y', (Math.random() * 80 + 500) + 'px');
-  butterfly.style.setProperty('--mid-x', (Math.random() * 200 - 100) + 'px');
-  butterfly.style.setProperty('--mid-y', (-100 - Math.random() * 100) + 'px');
-  butterfly.style.setProperty('--end-x', (Math.random() * 200 - 100) + 'px');
-  butterfly.style.setProperty('--end-y', (-250 - Math.random() * 150) + 'px');
-  butterfly.style.setProperty('--r1', (Math.random() * 20 - 10) + 'deg');
-  butterfly.style.setProperty('--r2', (Math.random() * 25 - 15) + 'deg');
-  butterfly.style.setProperty('--r3', (Math.random() * 30 - 10) + 'deg');
-  butterfly.style.animationDelay = (Math.random() * 0.5) + 's';
-  container.appendChild(butterfly);
-  setTimeout(() => butterfly.remove(), 4500);
- }
+const container = document.getElementById('butterflyContainer');
+const count = Math.floor(Math.random() * 2) + 2; // 2–3 butterflies
+for (let i = 0; i < count; i++) {
+const butterfly = document.createElement('div');
+butterfly.className = 'butterfly';
+const duration = (3.2 + Math.random() * 1.0) + 's';
+butterfly.style.setProperty('--duration', duration);
+butterfly.style.left = (10 + Math.random() * 80) + '%';
+butterfly.style.bottom = '-60px';
+butterfly.style.setProperty('--start-x', (Math.random() * 200 - 100) + 'px');
+butterfly.style.setProperty('--start-y', (Math.random() * 80 + 500) + 'px');
+butterfly.style.setProperty('--mid-x', (Math.random() * 200 - 100) + 'px');
+butterfly.style.setProperty('--mid-y', (-100 - Math.random() * 100) + 'px');
+butterfly.style.setProperty('--end-x', (Math.random() * 200 - 100) + 'px');
+butterfly.style.setProperty('--end-y', (-250 - Math.random() * 150) + 'px');
+butterfly.style.setProperty('--r1', (Math.random() * 20 - 10) + 'deg');
+butterfly.style.setProperty('--r2', (Math.random() * 25 - 15) + 'deg');
+butterfly.style.setProperty('--r3', (Math.random() * 30 - 10) + 'deg');
+butterfly.style.animationDelay = (Math.random() * 0.5) + 's';
+container.appendChild(butterfly);
+setTimeout(() => butterfly.remove(), 4500);
+}
 }
 function showSparkle() {
- sparkle.innerHTML = '';
- const count = 20; // more visible sparkles
- for (let i = 0; i < count; i++) {
-  const el = document.createElement('div');
-  el.className = 'particle';
-  el.style.left = (10 + Math.random() * 80) + '%';
-  el.style.top = (-20 - Math.random() * 20) + 'px'; // start above page
-  el.style.animationDelay = (Math.random() * 1.2) + 's';
-  el.style.width = (5 + Math.random() * 8) + 'px';
-  el.style.height = el.style.width;
-  sparkle.appendChild(el);
-  setTimeout(() => { el.remove(); }, 4200);
- }
+sparkle.innerHTML = '';
+const count = 20; // more visible sparkles
+for (let i = 0; i < count; i++) {
+const el = document.createElement('div');
+el.className = 'particle';
+el.style.left = (10 + Math.random() * 80) + '%';
+el.style.top = (-20 - Math.random() * 20) + 'px'; // start above page
+el.style.animationDelay = (Math.random() * 1.2) + 's';
+el.style.width = (5 + Math.random() * 8) + 'px';
+el.style.height = el.style.width;
+sparkle.appendChild(el);
+setTimeout(() => { el.remove(); }, 4200);
+}
 }
 
-const flipSound = new Audio('page-flip-47177.mp3');
+const flipSound = new Audio('page-flip-47177.mp3'); // Placeholder for sound file
 function playFlipSound() {
- flipSound.currentTime = 0;
- flipSound.play();
+flipSound.currentTime = 0;
+flipSound.play().catch(e => console.log("Audio play blocked.")); // Added catch for logging
 }
 
 function animateFlip(){
- playFlipSound();
- book.style.transition = 'transform 0.6s ease';
- book.style.transform = 'rotateY(-10deg)';
- setTimeout(()=>{ book.style.transform='rotateY(0deg)'; },300);
- showSparkle();
- showButterfly();
+playFlipSound();
+book.style.transition = 'transform 0.6s ease';
+book.style.transform = 'rotateY(-10deg)';
+setTimeout(()=>{ book.style.transform='rotateY(0deg)'; },300);
+showSparkle();
+showButterfly();
 }
 
+// RENDER FUNCTION (Modified to handle 'starryNight' pageType)
 function render(){
- pageWrap.innerHTML = '';
- const current = pages[index];
- const pageNode = document.createElement('section');
- pageNode.className = 'page';
- 
- if(current.mainTitle){
-  // Cover Page Rendering
-  pageNode.classList.add('cover');
-  pageNode.innerHTML = `
-   <div class="main-title">${escapeHtml(current.mainTitle)}</div>
-   ${current.personImg ? `<div class="person-img"><img src="${current.personImg}" alt="Person"></div>` : ''}
-   <div class="subtitle">${escapeHtml(current.subtitle)}</div>
-   <div class="note">${escapeHtml(current.message)}</div>`;
- } else {
-  // Regular Page Rendering
-  let mediaHtml = '';
-  // Add optional media overlay
-  if (current.mediaUrl) {
-   mediaHtml = `<div class="page-media"><img src="${current.mediaUrl}" alt="Decorative media"></div>`;
-  }
+pageWrap.innerHTML = '';
+const current = pages[index];
+const pageNode = document.createElement('section');
+pageNode.className = 'page';
 
-  pageNode.innerHTML = `
-   ${mediaHtml}
-   <div class="note">${escapeHtml(current.message)}</div>
-  `;
- }
+// Ensure message box is hidden when a new page renders
+messageOverlay.classList.remove('visible');
 
- pageWrap.appendChild(pageNode);
- setTimeout(()=>{ pageNode.classList.add('visible'); }, 100);
+if(current.mainTitle){
+// Cover Page Rendering (Unchanged)
+pageNode.classList.add('cover');
+pageNode.innerHTML = `
+<div class="main-title">${escapeHtml(current.mainTitle)}</div>
+${current.personImg ? `<div class="person-img"><img src="${current.personImg}" alt="Person"></div>` : ''}
+<div class="subtitle">${escapeHtml(current.subtitle)}</div>
+<div class="note">${escapeHtml(current.message)}</div>`;
+} 
+else if (current.pageType === 'starryNight') {
+// === Starry Night Page Rendering ===
+let mediaHtml = '';
+if (current.mediaUrl) {
+ // Use the full image with 100% opacity for this page type
+ mediaHtml = `<div class="page-media starry-night-bg"><img src="${current.mediaUrl}" alt="Starry night background"></div>`;
+}
+
+let starsHtml = `<div class="star-container">`;
+current.stars.forEach(star => {
+ starsHtml += `<div class="star" id="${star.id}" style="${star.position}" data-message="${escapeHtml(star.message)}"></div>`;
+});
+starsHtml += `</div>`;
+
+// NEW: Added the star prompt message
+const starPromptHtml = `<div class="star-prompt">Click on stars to read messages</div>`;
+
+pageNode.innerHTML = `
+ ${mediaHtml}
+ ${starPromptHtml} 
+ ${starsHtml}
+ <div class="note" style="margin-top: 0; opacity: 0;">&nbsp;</div> `;
+
+// Add click listeners to stars
+setTimeout(() => {
+ pageNode.querySelectorAll('.star').forEach(star => {
+ star.addEventListener('click', (event) => {
+  const fullMessage = event.target.dataset.message;
+  const parts = fullMessage.split('<br>');
+  messageTitle.innerHTML = parts[0];
+  messageContent.innerHTML = parts.slice(1).join('<br>');
+  messageOverlay.classList.add('visible');
+ });
+ });
+}, 0); 
+}
+else {
+// Regular Page Rendering (Unchanged)
+let mediaHtml = '';
+if (current.mediaUrl) {
+mediaHtml = `<div class="page-media"><img src="${current.mediaUrl}" alt="Decorative media"></div>`;
+}
+
+pageNode.innerHTML = `
+${mediaHtml}
+<div class="note">${escapeHtml(current.message)}</div>
+`;
+}
+
+pageWrap.appendChild(pageNode);
+setTimeout(()=>{ pageNode.classList.add('visible'); }, 100);
+}
+
+// Navigation Handlers (Modified to check for message box)
+function nextPage() {
+if (messageOverlay.classList.contains('visible')) return; // Prevent page turn if message is open
+if(index < pages.length-1){ index++; animateFlip(); render(); }
+}
+function prevPage() {
+if (messageOverlay.classList.contains('visible')) return; // Prevent page turn if message is open
+if(index > 0){ index--; animateFlip(); render(); }
 }
 
 document.addEventListener('keydown',e=>{
- if(e.key==='ArrowRight'||e.key==='PageDown'){ if(index<pages.length-1){ index++; animateFlip(); render(); } }
- if(e.key==='ArrowLeft'||e.key==='PageUp'){ if(index>0){ index--; animateFlip(); render(); } }
+if(e.key==='ArrowRight'||e.key==='PageDown'){ nextPage(); }
+if(e.key==='ArrowLeft'||e.key==='PageUp'){ prevPage(); }
 });
 
 let touchStartX=0;
 document.addEventListener('touchstart',e=>{ touchStartX=e.touches[0].clientX; },{passive:true});
 document.addEventListener('touchend',e=>{
- const dx=e.changedTouches[0].clientX-touchStartX;
- if(Math.abs(dx)>40){ 
-  if(dx<0 && index<pages.length-1){ index++; animateFlip(); render(); }
-  else if(dx>0 && index>0){ index--; animateFlip(); render(); }
- }
+if (messageOverlay.classList.contains('visible')) return; // Prevent page turn if message is open
+const dx=e.changedTouches[0].clientX-touchStartX;
+if(Math.abs(dx)>40){ 
+if(dx<0){ nextPage(); }
+else if(dx>0){ prevPage(); }
+}
 });
 
 render();
