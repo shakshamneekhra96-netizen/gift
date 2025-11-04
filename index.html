@@ -461,13 +461,33 @@ transform: scale(1.1);
   
 }
 
-@media (max-height: 700px) and (max-width: 640px) {
-/* Further adjust for shorter mobile screens */
-:root {
---page-height: calc(95vw * 1.2); /* Make it a bit shorter if screen is also short */
+@media (max-width: 400px) {
+  .mobile-note {
+    display: block;
+    text-align: center;
+    width: 90vw;
+  }
+
+  /* Calculate width & height dynamically based on viewport height */
+  :root {
+    --scene-height: 100vh;
+    --scene-width: calc(var(--scene-height) * 2.15);
+  }
+
+  .scene {
+    width: var(--scene-width);
+    height: var(--scene-height);
+
+    /* Small margin around */
+    margin: 4px;
+
+    /* Prevent overflow and keep centered */
+    max-width: 100vw;
+    max-height: 100vh;
+    overflow: hidden;
+  }
 }
 
-}
 
 
 </style>
