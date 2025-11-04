@@ -425,16 +425,12 @@ transform: scale(1.1);
 
 /* Media Query for mobile - must be at the end of @media blocks */
 @media (max-width: 640px) {
-.mobile-note { display: block; text-align: center; width: 90vw; }
-}
-
-
-/* Media Query for mobile - must be at the end of @media blocks */
-@media (max-width: 640px) {
   .mobile-note {
-    display: block;
+    display: flex;
+    justify-content: center;
     text-align: center;
     width: 90vw;
+    bottom: 32%;
   }
 
   /* Dynamically adjust page height for 4:3 ratio */
@@ -463,9 +459,11 @@ transform: scale(1.1);
 
 @media (max-width: 400px) {
   .mobile-note {
-    display: block;
+    display: flex;
+    justify-content: center;
     text-align: center;
     width: 90vw;
+    bottom: 0%;
   }
 
   /* Calculate width & height dynamically based on viewport height */
