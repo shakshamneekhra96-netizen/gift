@@ -38,9 +38,7 @@ padding: 0;
 body {
 display: flex;
 flex-direction: column;
-align-items: center;
-/* CHANGED: Justify content to center to vertically align the book */
-justify-content: center; 
+align-items: center; 
 /* min-height: 100vh; removed, now using height: 100% from html,body */
 background: linear-gradient(180deg, #fdf6ed 0%, #d2b48c 85%);
 font-family: 'IM Fell English', serif;
@@ -428,17 +426,41 @@ transform: scale(1.1);
 /* Media Query for mobile - must be at the end of @media blocks */
 @media (max-width: 640px) {
 .mobile-note { display: block; text-align: center; width: 90vw; }
-/* Adjusted page height for mobile to a 4:3 aspect ratio relative to width */
-:root {
---page-height: calc(95vw * 1.33); 
 }
-.scene {
-/* Ensure the scene has proper spacing around it on mobile */
-margin-top: 2vh; /* Small margin from top */
-margin-bottom: 2vh; /* Small margin from bottom */
-height: 928px;
+
+
+/* Media Query for mobile - must be at the end of @media blocks */
+@media (max-width: 640px) {
+  .mobile-note {
+    display: block;
+    text-align: center;
+    width: 90vw;
+  }
+
+  /* Dynamically adjust page height for 4:3 ratio */
+  :root {
+    --page-width: 96vw;
+    --page-height: calc(var(--page-width) * 1.5);
+  }
+
+  .scene {
+    /* Automatically set width & height based on viewport */
+    width: var(--page-width);
+    height: var(--page-height);
+
+
+
+    /* Optional: ensure it fits smaller screens */
+    max-width: 100vw;
+    max-height: 100vh;
+
+    /* Smooth scaling */
+    transform-origin: center;
+    transform: scale(1);
+  }
+  
 }
-}
+
 @media (max-height: 700px) and (max-width: 640px) {
 /* Further adjust for shorter mobile screens */
 :root {
@@ -582,7 +604,7 @@ personImg: "front_photo.png"
 },
 {
  "id": "star3",
- "position": "top: 32%; left: 67%; transform: translateX(-50%);", // Centered star
+ "position": "top: 23%; left: 67%; transform: translateX(-50%);", // Centered star
  "message": "Downside<br>If I had to pick one downside, maybe it’s that you’re a little too busy — or maybe you just like keeping people guessing"
 }
 ]
