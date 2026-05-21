@@ -581,22 +581,32 @@
   </div>
 
   <script>
-    // Log Visit Script (Left Unmodified)
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwEvkkWCAGINBdBHW4iOWrFF2At0YgclqJay-NybxgErj-OsH81YNTgt9Tu2nObimPu/exec"; // replace
+    // Log Visit Script
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxz6xl3ftZ7fw9BfqPkUG4jIQejrJIBDO8f_TU6VIbvQ0jdguGK0dGsKwCdTmvc_4JO/exec";
+
     function getDeviceType() {
       const ua = navigator.userAgent;
-
-      if (/iphone/.test(ua)) return "iPhone";
-      if (/ipad/.test(ua)) return "iPad";
-      if (/android/.test(ua)) return "Android";
-      if (/tablet/.test(ua)) return "Tablet";
-      if (/mobile/.test(ua)) return "Mobile";
+      if (/iphone/i.test(ua)) return "iPhone";
+      if (/ipad/i.test(ua)) return "iPad";
+      if (/android/i.test(ua)) return "Android";
+      if (/tablet/i.test(ua)) return "Tablet";
+      if (/mobile/i.test(ua)) return "Mobile";
       return "Desktop";
     }
 
-    async function logVisit() {
-      // IP and location retrieval removed for privacy
+    // We use this variable to prevent double-logging (e.g., two OPENs in a row)
+    let isCurrentlyOpen = false;
+
+    async function logEvent(actionType) {
+      // Prevent sending duplicate events
+      if (actionType === "OPEN" && isCurrentlyOpen) return;
+      if (actionType === "CLOSE" && !isCurrentlyOpen) return;
+
+      // Update the state
+      isCurrentlyOpen = (actionType === "OPEN");
+
       const visitData = {
+        action: actionType,
         ts_iso: new Date().toISOString(),
         deviceType: getDeviceType(),
         platform: navigator.platform,
@@ -605,15 +615,37 @@
         userAgent: navigator.userAgent
       };
 
-      await fetch(scriptURL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(visitData)
-      }).catch(e => console.log("Visit logging failed:", e)); // Added catch for logging
+      try {
+        await fetch(scriptURL, {
+          method: 'POST',
+          mode: 'no-cors',
+          keepalive: true,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(visitData)
+        });
+      } catch (e) {
+        console.log(actionType + " logging failed:", e);
+      }
     }
 
-    window.onload = logVisit;
+    // 1. Check state immediately on load
+    if (document.visibilityState === 'visible') {
+      logEvent("OPEN");
+    }
+
+    // 2. Handle switching tabs, minimizing the browser, and coming back
+    window.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        logEvent("OPEN");  // Logs OPEN when they return to the browser
+      } else if (document.visibilityState === 'hidden') {
+        logEvent("CLOSE"); // Logs CLOSE when they switch apps/tabs
+      }
+    });
+
+    // 3. Fallback for completely closing the tab/window on desktop
+    window.addEventListener('pagehide', () => {
+      logEvent("CLOSE");
+    });
 
 
     // Pages Array with new 'mediaUrl' property and the new interactive page
