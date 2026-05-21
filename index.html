@@ -112,7 +112,26 @@
       /* Needed for absolute positioning of media */
       overflow: hidden;
       /* Important for full background images */
+      z-index: 0;
     }
+
+    .page.no-media::before {
+      content: attr(data-letter);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20rem;
+      color: #3b2414;
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: -1;
+      font-family: 'Parisienne', serif;
+      user-select: none;
+    }
+
+
+
 
     .page.visible {
       opacity: 1;
@@ -317,13 +336,18 @@
     }
 
     .cover .main-title {
-      font-family: 'Parisienne', 'Cormorant Garamond', serif;
+      font-family: 'Halimun', 'Parisienne', cursive;
       color: #402918;
+      font-weight: normal;
+      font-size: clamp(3rem, 10vw, 5rem);
     }
 
     .cover .subtitle {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Cinzel', serif;
       color: #4c3120;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
     }
 
 
@@ -493,6 +517,28 @@
       background: #b89f7f;
       /* Kept original hover color */
       transform: scale(1.1);
+    }
+
+    .clickable-word {
+      color: #3b2414;
+      text-decoration: none;
+      font-style: italic;
+      font-weight: normal;
+      display: inline;
+      border-bottom: 1.5px dotted rgba(59, 36, 20, 0.2);
+    }
+
+    .clickable-word:hover {
+      border-bottom-color: rgba(59, 36, 20, 0.4);
+    }
+
+    .message-box img {
+      width: 100%;
+      max-height: 45vh;
+      object-fit: contain;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
     }
 
     /* Media Query for mobile - must be at the end of @media blocks */
@@ -692,14 +738,25 @@
       },
       { "message": "Maybe I won’t always be part of your happy moments, but whenever your days feel heavy or something is quietly bothering you, I would really like to listen — even if it’s the same thing again and again.You don’t have to carry everything alone. I truly mean it when I say I’m here for you.I don’t care about many people in my life, but that changed after you. I genuinely care.I know I’m not very good at expressing things. Sometimes I don’t even know how to ask if you’re okay or if you want to talk.And if I ask too many questions or message you, it’s not to disturb or annoy you — it’s just because I want to talk to you and make sure you’re okay. I really enjoy your company." },
       {
-        "message": "There is something I really want to know about you — all your silly, funny childhood stories (they would be funny), like being afraid of ghosts or doing something silly, like beating someone in school (I know you’re a very cute and simple girl, but in your mind you must have imagined that at least once, right?). And I guess you were a good dancer in school. You can talk to me about anything, freely and without hesitation — even the smallest or most random things. And maybe you’re wondering, “Why should I tell you? Can I really trust you?” I just want to say — try trusting me once. I know you’re an overthinker and very sensitive, and I’ll take care of that too. You might feel a bit lighter. And I promise you this — whatever you tell me stays with me. I won’t share it with anyone. I’m good at keeping secrets."
+        "message": "There is something I really want to know about you — all your silly, funny childhood stories (they would be funny), like being afraid of ghosts or doing something silly, like beating someone in school (I know you're a very cute and simple girl, but in your mind you must have imagined that at least once, right?). And I guess you were a good dancer in school. You can talk to me about anything, freely and without hesitation — even the smallest or most random things. And maybe you're wondering, \"Why should I tell you? Can I really trust you?\" I just want to say — try trusting me once. I know you're an overthinker and very sensitive, and I'll take care of that too. You might feel a bit lighter. And I promise you this — whatever you tell me stays with me. I won't share it with anyone. I'm good at keeping secrets.",
+        "clickableWord": {
+          "text": "very cute",
+          "image": "ghibliart.jpg",
+          "title": "Thanks for Ice cream suggestion",
+          "popupMessage": "This is such an incredibly cute image, yaar! Thank you for suggesting the ice cream. You know, in Indore, Naturals also has that kind of ice cream. We should go there sometime. I’d really like to go with you and try it. If you’re free, please let me know. Also, the cake you made was honestly so tasty yrrrr. If you make it again, please bring me one piece. In exchange, I’ll give you anything you want. "
+        }
       },
       {
         "message": "Sometimes, when the sun goes down and the stars appear, you might find yourself sitting alone, thinking about things you can’t share with anyone. Some days are full of smiles, but when evening comes, there’s a stillness — the kind that makes your heart feel heavy and your mind restless. In those moments, let your thoughts wander. Take a deep breath. Even a small conversation can bring a little peace, like a quiet light in the dark. And if you ever feel like speaking, don’t hesitate. I may not always say much, but I’ll be there to listen — quietly, without pressure, just with you. I’ll always make time for you — that’s my promise.",
         "mediaUrl": "sitting_moon.png"
       },
       {
-        "message": "You may not believe it, but to me, you’re an amazing person with a good heart. I’m sure many people have told you that in their own ways — because it’s true. But for me, you’re a bit special — someone whose company I truly enjoy, who has an amazing vibe, and whom I genuinely care. You know, sometimes I think about those quiet moments with friends — maybe you’ve felt them too — when frustration or a bit of sadness makes your heart feel heavy. You sit there silently, surrounded by people, but not really wanting to talk, and a few tears slip down as your little black eyes shine with tiny drops of water. In that moment, you look so soft, so real, and honestly, too cute. Let those tears fall, close your eyes, take a deep breath, and go to your best friends; talk about any random, silly thing — it really helps."
+        "message": "You may not believe it, but to me, you’re an amazing person with a good heart. I’m sure many people have told you that in their own ways — because it’s true. But for me, you’re a bit special — someone whose company I truly enjoy, who has an amazing vibe, and whom I genuinely care. You know, sometimes I think about those quiet moments with friends — maybe you’ve felt them too — when frustration or a bit of sadness makes your heart feel heavy. You sit there silently, surrounded by people, but not really wanting to talk, and a few tears slip down as your little black eyes shine with tiny drops of water. In that moment, you look so soft, so real, and honestly, too cute. Let those tears fall, close your eyes, take a deep breath, and go to your best friends; talk about any random, silly thing — it really helps.",
+        "clickableWord": {
+          "text": "random, silly thing",
+          "title": "A Little Something... 🤍",
+          "popupMessage": "Do you know something? Sometimes your silly little expressions are genuinely the cutest thing ever.<br><br>Like when you make that tiny angry face, or when you smile without even realizing it, or when someone annoys you but you still smile and say, “Okay, okay.”<br><br>And that serious look when you sit with one hand in your hair and stare at your laptop like you’re thinking about something really important. That looks so cute.<br>Or when you close one eye while thinking and make those unintentionally funny-cute faces.<br><br>Please try clicking pictures like that someday. Make a whole little album of your random expressions. I would honestly love to see them. That would genuinely be one of the best things I could ever see.<br><br>i gave 1000 for that (good deal hai batao)"
+        }
       },
       {
         "message": "I once read that “Even the purest heart has the allure of darkness.” And I think that’s true — we all carry both light and shadow within us. But when I look at you, I mostly see light. Even the parts you call ‘dark’ just make you more human, more real — and honestly, even more beautiful.\nI’m not a good writer, but I wrote this for you —\n“Your smile brings peace to every heart,\nEven your silence feels like an art.\nYour heart is pure, your kindness true,\nAnd it shows in everything you do.\nIf you were a star, you’d outshine the moon,\nYou’re simply good, like a child — that’s the truth about you.”"
@@ -1032,18 +1089,83 @@ ${current.personImg ? `<div class="person-img"><img src="${current.personImg}" a
           });
         }, 0);
       }
+
       else {
-        // Regular Page Rendering (Unchanged)
+        // Regular Page Rendering
         let mediaHtml = '';
         if (current.mediaUrl) {
           mediaHtml = `<div class="page-media"><img src="${current.mediaUrl}" alt="Decorative media"></div>`;
+        } else {
+          // If no media, add the special class for the patterned background
+          pageNode.classList.add('no-media');
+        }
+
+        // Check if this page has a clickable word easter egg
+        let noteText = escapeHtml(current.message);
+        if (current.clickableWord) {
+          const cw = current.clickableWord;
+          const escaped = escapeHtml(cw.text);
+          noteText = noteText.replace(escaped, `<span class="clickable-word" data-cw-image="${cw.image || ''}" data-cw-title="${escapeHtml(cw.title)}" data-cw-msg="${escapeHtml(cw.popupMessage)}">${escaped}</span>`);
         }
 
         pageNode.innerHTML = `
 ${mediaHtml}
-<div class="note">${escapeHtml(current.message)}</div>
+<div class="note">${noteText}</div>
 `;
+
+        // Attach click listener for clickable word
+        if (current.clickableWord) {
+          setTimeout(() => {
+            const cwEl = pageNode.querySelector('.clickable-word');
+            if (cwEl) {
+              cwEl.addEventListener('click', () => {
+                messageTitle.innerHTML = cwEl.dataset.cwTitle;
+                const hasImage = !!cwEl.dataset.cwImage;
+
+                // Start with a dummy image first if an image is provided
+                let contentHtml = '';
+                if (hasImage) {
+                  contentHtml = `<img id="surpriseImg" src="dummy.jpg" alt="Surprise"><br>`;
+                }
+                contentHtml += `<div id="surpriseMsg" style="opacity: 0; transition: opacity 0.5s ease;">${cwEl.dataset.cwMsg}</div>`;
+
+                messageContent.innerHTML = contentHtml;
+                messageOverlay.classList.add('visible');
+
+                // Swap to the real image and show message after 2 seconds (or immediately if no image)
+                setTimeout(() => {
+                  const img = document.getElementById('surpriseImg');
+                  const msg = document.getElementById('surpriseMsg');
+                  if (messageOverlay.classList.contains('visible')) {
+                    if (img && hasImage) {
+                      img.src = cwEl.dataset.cwImage;
+                    }
+                    if (msg) msg.style.opacity = '1';
+                  }
+                }, hasImage ? 2000 : 100);
+              });
+            }
+          }, 0);
+        }
       }
+
+
+      // Set the large background letter only on pages without media/cover/starryNight
+      if (index >= 3 && !current.mediaUrl && !current.mainTitle && current.pageType !== 'starryNight') {
+        // Count how many text-only pages came before this one to get the right letter
+        let letterIndex = 0;
+        for (let i = 3; i < index; i++) {
+          if (!pages[i].mediaUrl && !pages[i].mainTitle && pages[i].pageType !== 'starryNight') {
+            letterIndex++;
+          }
+        }
+        const letters = "ILIKEU";
+        const char = letters[letterIndex % letters.length];
+        pageNode.setAttribute('data-letter', char);
+      }
+
+
+
 
       pageWrap.appendChild(pageNode);
       setTimeout(() => { pageNode.classList.add('visible'); }, 100);
